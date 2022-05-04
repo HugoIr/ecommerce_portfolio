@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 
 class CardItem extends StatelessWidget {
@@ -13,19 +14,21 @@ class CardItem extends StatelessWidget {
   double width = 130;
   final double? height;
   final double? xPadding;
+  bool isForFilter;
 
-  CardItem(
-      {Key? key,
-      required this.id,
-      required this.name,
-      required this.url,
-      required this.price,
-      this.isSelected = false,
-      this.discount,
-      this.width = 130,
-      this.height,
-      this.xPadding})
-      : super(key: key);
+  CardItem({
+    Key? key,
+    required this.id,
+    required this.name,
+    required this.url,
+    required this.price,
+    this.isSelected = false,
+    this.discount,
+    this.width = 130,
+    this.height,
+    this.xPadding,
+    this.isForFilter = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +101,6 @@ class CardItem extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () async {
-                            print(
-                                "ISSELECTEDDD dari carditem $id : $isSelected");
                             if (!isSelected) {
                               BlocProvider.of<ForYouBloc>(context)
                                 ..add(AddToWishlistEvent(
@@ -109,11 +110,13 @@ class CardItem extends StatelessWidget {
                                     price: price,
                                     discount: discount!));
                             } else {
-                              // BlocProvider.of<ForYouBloc>(context)
-                              //   ..add(RemoveToWishlistEvent(id: id));
                               context
                                   .read<ForYouBloc>()
                                   .add(RemoveToWishlistEvent(id: id));
+                            }
+                            if (isForFilter) {
+                              context.read<SearchResultBloc>()
+                                ..add(RefreshSearchEvent());
                             }
                           },
                           child: isSelected

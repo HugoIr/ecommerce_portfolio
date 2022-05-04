@@ -18,11 +18,29 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     on<RemoveToWishlistEvent>(_onRemoveToWishlist);
   }
 
+  List<Item> cloneList(List list) {
+    List<Item> newList = [];
+    for (int i = 0; i < list.length; i++) {
+      Item item = list[i];
+      print("item $item");
+      newList.add(Item(
+        id: item.id,
+        name: item.name,
+        url: item.url,
+        price: item.price,
+        discount: item.discount,
+      ));
+    }
+    return newList;
+  }
+
   FutureOr<void> _onGetForYou(
       GetForYouEvent event, Emitter<ForYouState> emit) async {
     print("BRUDHH");
     var listsId = await userService.getListsId();
     print("listId $listsId");
+    // List<Item> oldList = cloneList(event.list);
+    // print("THIS is oldList ${oldList}");
     List<Item> newList = event.list.map((item) {
       if (listsId.contains(item.id.toString())) {
         print("selected item id ${item.id}");
@@ -30,6 +48,7 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
       }
       return item;
     }).toList();
+
     emit(LoadedForYouState(listsItem: newList));
   }
 

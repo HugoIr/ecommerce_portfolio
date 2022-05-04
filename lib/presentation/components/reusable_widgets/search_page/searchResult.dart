@@ -12,43 +12,32 @@ class SearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("REBUILD GASIH SI SEARHRESULT");
     return Container(
       height: 1000,
       padding: EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
-      child: BlocBuilder<SearchResultBloc, SearchResultState>(
-        builder: (context, state) {
-          return GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 270,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20),
-              itemCount: list.length,
-              itemBuilder: (buildContext, index) {
-                return BlocBuilder<ForYouBloc, ForYouState>(
-                  builder: (context, state) {
-                    print("state nya for you di searchresult $state");
-                    if (state is LoadedForYouState) {
-                      return CardItem(
-                        width: 170,
-                        xPadding: 14,
-                        id: list[index].id,
-                        name: list[index].name,
-                        url: list[index].url,
-                        price: list[index].price,
-                        discount: list[index].discount,
-                      );
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                );
-              });
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisExtent: 270,
+            crossAxisCount: 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
+        itemCount: list.length,
+        itemBuilder: (buildContext, index) {
+          return CardItem(
+            width: 170,
+            xPadding: 14,
+            id: list[index].id,
+            name: list[index].name,
+            url: list[index].url,
+            price: list[index].price,
+            discount: list[index].discount,
+            isSelected: list[index].isSelected,
+            isForFilter: true,
+          );
         },
       ),
     );

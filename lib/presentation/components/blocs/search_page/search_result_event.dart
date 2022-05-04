@@ -7,3 +7,5 @@ class SearchEvent extends SearchResultEvent {
   final String keyword;
   SearchEvent({required this.keyword});
 }
+
+class RefreshSearchEvent extends SearchResultEvent {}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/search_page/reusable_widgets_search_page.dart';
@@ -96,9 +97,13 @@ class SearchPage extends StatelessWidget {
             filterMenus(),
             space(),
             BlocBuilder<SearchResultBloc, SearchResultState>(
-              builder: (context, state) {
-                if (state is SearchResultLoaded) {
-                  if (state.results.isEmpty) {
+              // buildWhen: ((previous, current) {
+              //   return true;
+              // }),
+              builder: (context, searchState) {
+                print("SEARCHBLOC state $searchState");
+                if (searchState is SearchResultLoaded) {
+                  if (searchState.results.isEmpty) {
                     return Center(
                       child: Text(
                         "Produk tidak ditemukan",
@@ -109,9 +114,10 @@ class SearchPage extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return SearchResult(list: state.results);
+                    print("FILTEREDD");
+                    return SearchResult(list: searchState.results);
                   }
-                } else if (state is SearchResultLoading) {
+                } else if (searchState is SearchResultLoading) {
                   return Center(
                     child: CircularProgressIndicator(
                       color: Colors.grey[500],
@@ -119,7 +125,22 @@ class SearchPage extends StatelessWidget {
                   );
                 } else {
                   print("masuk else search");
-                  return SearchResult(list: dummyItemsList);
+                  context.read<ForYouBloc>()
+                    ..add(GetForYouEvent(list: dummyItemsList));
+                  return BlocBuilder<ForYouBloc, ForYouState>(
+                    builder: (context, forYouState) {
+                      if (forYouState is LoadedForYouState) {
+                        // print("forYOu listitem ${forYouState.listsItem.map(
+                        //   (e) => print(e.isSelected),
+                        // )}");
+                        return SearchResult(list: forYouState.listsItem);
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  );
                 }
               },
             )
