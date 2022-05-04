@@ -1,7 +1,10 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
+import 'package:funesia_clone/presentation/components/reusable_widgets/card_item.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
+import 'package:funesia_clone/presentation/pages/search_page/search_page.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -14,7 +17,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: Column(
           children: [
@@ -23,32 +26,69 @@ class _HomepageState extends State<Homepage> {
             space(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: subHeader("For you", () {}),
+              child: subHeader(
+                  text: "For you",
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => BlocProvider(
+                                  create: (context) => SearchResultBloc(),
+                                  child: SearchPage(),
+                                )));
+                  }),
             ),
             space26(),
-            // _cardItem()
-
-            Container(
-              height: 240,
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: 5,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 1),
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (buildContext, index) {
-                  return SizedBox(
-                    width: 14,
+            BlocBuilder<ForYouBloc, ForYouState>(
+              // buildWhen: (previous, current) {
+              //   print("buildwhen PREVIOUS $previous");
+              //   if (previous is ForYouInitial) {
+              //     return true;
+              //   } else if (previous is LoadedForYouState) {
+              //     return false;
+              //   } else {
+              //     return false;
+              //   }
+              // },
+              builder: (context, state) {
+                print("for you ui state $state");
+                if (state is LoadedForYouState) {
+                  return Container(
+                    height: 240,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: state.listsItem.length,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 1),
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (buildContext, index) {
+                        return const SizedBox(
+                          width: 14,
+                        );
+                      },
+                      itemBuilder: (buildContext, index) {
+                        return CardItem(
+                          id: state.listsItem[index].id,
+                          name: state.listsItem[index].name,
+                          url: state.listsItem[index].url,
+                          price: state.listsItem[index].price,
+                          discount: state.listsItem[index].discount,
+                          isSelected: state.listsItem[index].isSelected,
+                        );
+                      },
+                    ),
                   );
-                },
-                itemBuilder: (buildContext, index) {
-                  return cardItem();
-                },
-              ),
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
             space(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: subHeader("Kategori", () {}),
+              child: subHeader(text: "Kategori", onTap: () {}),
             ),
             space26(),
             Container(
@@ -71,7 +111,10 @@ class _HomepageState extends State<Homepage> {
             space(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: subHeader("Kategori", () {}),
+              child: subHeader(
+                  text: "Official Store",
+                  onTap: () {},
+                  icon: officialStoreIcon(size: 14)),
             ),
             space26(),
             Container(

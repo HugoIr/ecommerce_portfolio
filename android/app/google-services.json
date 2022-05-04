@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "624992071157",
+    "project_id": "funesiaclone",
+    "storage_bucket": "funesiaclone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624992071157:android:7cd3cd055eb50a594904bc",
+        "android_client_info": {
+          "package_name": "com.hugo.funesia_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "624992071157-ic67dfsil8p2u8h2lepad6mtlnu8hn6v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hugo.funesia_clone",
+            "certificate_hash": "0999d65748494407173d3488d8382ad7b11b0a8d"
+          }
+        },
+        {
+          "client_id": "624992071157-2k4l90f3i08u5oj9i679q5ee03ghnl7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUbIZet7IRU8NLG4kGScqJ2ujK_Tu6I7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "624992071157-2k4l90f3i08u5oj9i679q5ee03ghnl7j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

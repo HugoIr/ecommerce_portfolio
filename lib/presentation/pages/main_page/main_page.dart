@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/pages/pages_cubit.dart';
+import 'package:funesia_clone/presentation/components/homepage/app_bar_home.dart';
 import 'package:funesia_clone/presentation/components/homepage/navigation_bar_item.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/pages/homepage/homepage.dart';
@@ -23,14 +24,16 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("build mainapge");
     return Container(
       color: Colors.white,
       child: SafeArea(
         child: BlocBuilder<PagesCubit, int>(
           builder: (context, index) {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.white,
-              appBar: (index == 0) ? appBar() : null,
+              appBar: (index == 0) ? AppBarHome() : null,
               bottomNavigationBar: Container(
                 width: double.infinity,
                 height: 56,
@@ -38,7 +41,7 @@ class MainPage extends StatelessWidget {
                 // padding: EdgeInsets.only(bottom: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
+                  children: const [
                     Spacer(
                       flex: 1,
                     ),

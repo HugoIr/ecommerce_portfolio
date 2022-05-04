@@ -38,6 +38,11 @@ dependencies:
   sqflite:
   path:
   flutter_bloc: 8.0.1
+  firebase_core: ^1.15.0
+  firebase_auth: ^3.3.16
+  flutterfire_cli: ^0.2.1+1
+  dartz: ^0.10.1
+  cloud_firestore: ^3.1.13
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +70,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/header/
+    - assets/profile/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
