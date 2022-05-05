@@ -115,7 +115,10 @@ class SearchPage extends StatelessWidget {
                     );
                   } else {
                     print("FILTEREDD");
-                    return SearchResult(list: searchState.results);
+                    return SearchResult(
+                      list: searchState.results,
+                      isForFilter: true,
+                    );
                   }
                 } else if (searchState is SearchResultLoading) {
                   return Center(
@@ -133,7 +136,9 @@ class SearchPage extends StatelessWidget {
                         // print("forYOu listitem ${forYouState.listsItem.map(
                         //   (e) => print(e.isSelected),
                         // )}");
-                        return SearchResult(list: forYouState.listsItem);
+                        return SearchResult(
+                          list: forYouState.listsItem,
+                        );
                       } else {
                         return Center(
                           child: CircularProgressIndicator(),

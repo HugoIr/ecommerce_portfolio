@@ -42,7 +42,7 @@ class Main extends StatelessWidget {
         BlocProvider(
             create: (create) => ForYouBloc(
                 userService: UserService(firebaseFirestore: firebaseFirestore))
-              ..add(GetForYouEvent(list: dummyItemsList)))
+              ..add(GetForYouEvent(list: dummyItemsList))),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

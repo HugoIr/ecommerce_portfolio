@@ -14,17 +14,16 @@ class MainPage extends StatelessWidget {
   Widget switchPage(int currentIndex) {
     switch (currentIndex) {
       case 2:
-        return Profile();
+        return const Profile();
       case 1:
-        return OfficialStore();
+        return const OfficialStore();
       default:
-        return Homepage();
+        return const Homepage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build mainapge");
     return Container(
       color: Colors.white,
       child: SafeArea(

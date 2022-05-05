@@ -116,7 +116,7 @@ class CardItem extends StatelessWidget {
                             }
                             if (isForFilter) {
                               context.read<SearchResultBloc>()
-                                ..add(RefreshSearchEvent());
+                                ..add(RefreshSearchEvent(id: id));
                             }
                           },
                           child: isSelected

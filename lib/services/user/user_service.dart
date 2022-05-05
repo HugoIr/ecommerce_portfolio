@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:funesia_clone/data/model/remote/item.dart';
 
 class UserService {
   FirebaseFirestore firebaseFirestore;
@@ -56,6 +57,39 @@ class UserService {
     } else {
       print("error");
     }
+  }
+
+  Future<List<Item>> getListOfCurrentWishlist() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var wishlist;
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        wishlist = _convertMapToItem(value.data()!["wishlist"]);
+      });
+
+      return wishlist;
+    } else {
+      print("error");
+      return [];
+    }
+  }
+
+  List<Item> _convertMapToItem(Map<String, dynamic> map) {
+    List<Item> list = [];
+    map.forEach((key, value) {
+      print("$key $value");
+      list.add(Item(
+          id: int.parse(key),
+          name: value['name'],
+          price: value['price'],
+          discount: value['discount'],
+          url: value["url"]));
+    });
+    return list;
   }
 
   dynamic addWishlist(
@@ -139,6 +173,7 @@ class UserService {
   dynamic _removeItemFromExistingWishlist({
     required int id,
   }) async {
+    print("id yg ingin diremove: $id");
     var currentWishlist = await getCurrentWishlist();
 
     if (currentWishlist.isNotEmpty || currentWishlist[id] != null) {

@@ -22,19 +22,22 @@ class SearchResultBloc extends Bloc<SearchResultEvent, SearchResultState> {
       Duration(milliseconds: 300),
     );
     print("_onSearch");
+
+    // just a quick note: object Item yg ada disini itu sama dengan
+    // Object Item yg telah diolah di ForYouBloc
     List<Item> results = dummyItemsList
         .where((item) => item.name.toLowerCase().contains(event.keyword))
         .toList();
     print(results);
 
-    var listsId = await userService.getListsId();
-    results = results.map((item) {
-      if (listsId.contains(item.id.toString())) {
-        print("selected item id ${item.id}");
-        item.isSelected = true;
-      }
-      return item;
-    }).toList();
+    // var listsId = await userService.getListsId();
+    // results = results.map((item) {
+    //   if (listsId.contains(item.id.toString())) {
+    //     // print("selected item id ${item.id}");
+    //     item.isSelected = true;
+    //   }
+    //   return item;
+    // }).toList();
 
     emit(SearchResultLoaded(results: results));
   }
@@ -44,16 +47,7 @@ class SearchResultBloc extends Bloc<SearchResultEvent, SearchResultState> {
     final state = this.state;
 
     if (state is SearchResultLoaded) {
-      var listsId = await userService.getListsId();
-      final results = state.results.map((item) {
-        if (listsId.contains(item.id.toString())) {
-          print("selected item id ${item.id}");
-          item.isSelected = true;
-        }
-        return item;
-      }).toList();
-
-      emit(SearchResultLoaded(results: results));
+      emit(SearchResultLoaded(results: state.results));
     }
   }
 }

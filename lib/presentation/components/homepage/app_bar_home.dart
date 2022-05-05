@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
 import 'package:funesia_clone/presentation/pages/search_page/search_page.dart';
+import 'package:funesia_clone/presentation/wishlist/wishlist.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 
 class AppBarHome extends StatelessWidget with PreferredSizeWidget {
@@ -172,9 +174,24 @@ class AppBarHome extends StatelessWidget with PreferredSizeWidget {
         SizedBox(
           width: 12,
         ),
-        Icon(
-          Icons.favorite_border,
-          color: Colors.white,
+        InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (builder) => BlocProvider(
+                          create: (create) => WishlistBloc(
+                              userService: UserService(
+                                  firebaseFirestore:
+                                      FirebaseFirestore.instance))
+                            ..add(GetWishlistEvent()),
+                          child: Wishlist(),
+                        )));
+          },
+          child: Icon(
+            Icons.favorite_border,
+            color: Colors.white,
+          ),
         ),
         SizedBox(
           width: 12,

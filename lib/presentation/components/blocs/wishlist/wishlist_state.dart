@@ -5,4 +5,7 @@ abstract class WishlistState {}
 
 class WishlistInitial extends WishlistState {}
 
-class WishlistAddedState extends WishlistState {}
+class WishlistLoadedState extends WishlistState {
+  final List<Item> listsItem;
+  WishlistLoadedState({required this.listsItem});
+}

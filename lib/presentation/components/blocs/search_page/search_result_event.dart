@@ -8,4 +8,7 @@ class SearchEvent extends SearchResultEvent {
   SearchEvent({required this.keyword});
 }
 
-class RefreshSearchEvent extends SearchResultEvent {}
+class RefreshSearchEvent extends SearchResultEvent {
+  final int id;
+  RefreshSearchEvent({required this.id});
+}

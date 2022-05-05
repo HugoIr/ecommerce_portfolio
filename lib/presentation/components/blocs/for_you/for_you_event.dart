@@ -4,7 +4,7 @@ part of 'for_you_bloc.dart';
 abstract class ForYouEvent {}
 
 class GetForYouEvent extends ForYouEvent {
-  List<Item> list;
+  final List<Item> list;
   GetForYouEvent({required this.list});
 }
 

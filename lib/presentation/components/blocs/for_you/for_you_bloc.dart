@@ -43,7 +43,7 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     // print("THIS is oldList ${oldList}");
     List<Item> newList = event.list.map((item) {
       if (listsId.contains(item.id.toString())) {
-        print("selected item id ${item.id}");
+        // print("selected item id ${item.id}");
         item.isSelected = true;
       }
       return item;
