@@ -39,8 +39,7 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     print("BRUDHH");
     var listsId = await userService.getListsId();
     print("listId $listsId");
-    // List<Item> oldList = cloneList(event.list);
-    // print("THIS is oldList ${oldList}");
+
     List<Item> newList = event.list.map((item) {
       if (listsId.contains(item.id.toString())) {
         // print("selected item id ${item.id}");
@@ -57,13 +56,11 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     final state = this.state;
 
     if (state is LoadedForYouState) {
-      final newLists = state.listsItem.map((item) {
+      for (Item item in state.listsItem) {
         if (item.id == event.id) {
-          print("isselected with item id ${item.id}");
-          item.isSelected = true;
+          item.isSelected = !item.isSelected;
         }
-        return item;
-      }).toList();
+      }
 
       userService.addWishlist(
         id: event.id,
@@ -72,7 +69,7 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
         price: event.price,
         discount: event.discount,
       );
-      emit(LoadedForYouState(listsItem: newLists));
+      emit(LoadedForYouState(listsItem: state.listsItem));
     }
   }
 
@@ -81,18 +78,15 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     print("ONREMOVEEEEE;");
     final state = this.state;
     if (state is LoadedForYouState) {
-      final newLists = state.listsItem.map((item) {
+      for (Item item in state.listsItem) {
         if (item.id == event.id) {
-          print("isselected to remove with item id ${item.id}");
-          item.isSelected = false;
+          item.isSelected = !item.isSelected;
         }
-        return item;
-      }).toList();
-
+      }
       userService.removeWishlist(
         id: event.id,
       );
-      emit(LoadedForYouState(listsItem: newLists));
+      emit(LoadedForYouState(listsItem: state.listsItem));
     }
   }
 }

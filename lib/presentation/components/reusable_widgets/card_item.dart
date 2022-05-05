@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 
 class CardItem extends StatelessWidget {
@@ -15,6 +16,7 @@ class CardItem extends StatelessWidget {
   final double? height;
   final double? xPadding;
   bool isForFilter;
+  bool isForWishlist;
 
   CardItem({
     Key? key,
@@ -28,6 +30,7 @@ class CardItem extends StatelessWidget {
     this.height,
     this.xPadding,
     this.isForFilter = false,
+    this.isForWishlist = false,
   }) : super(key: key);
 
   @override
@@ -117,6 +120,10 @@ class CardItem extends StatelessWidget {
                             if (isForFilter) {
                               context.read<SearchResultBloc>()
                                 ..add(RefreshSearchEvent(id: id));
+                            }
+                            if (isForWishlist) {
+                              context.read<WishlistBloc>()
+                                ..add(ClickWishlistEvent(id: id));
                             }
                           },
                           child: isSelected

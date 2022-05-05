@@ -9,7 +9,12 @@ import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_
 class SearchResult extends StatelessWidget {
   final List<Item> list;
   bool isForFilter;
-  SearchResult({Key? key, required this.list, this.isForFilter = false})
+  bool isForWishlist;
+  SearchResult(
+      {Key? key,
+      required this.list,
+      this.isForFilter = false,
+      this.isForWishlist = false})
       : super(key: key);
 
   @override
@@ -39,6 +44,7 @@ class SearchResult extends StatelessWidget {
             discount: list[index].discount,
             isSelected: list[index].isSelected,
             isForFilter: isForFilter,
+            isForWishlist: isForWishlist,
           );
         },
       ),

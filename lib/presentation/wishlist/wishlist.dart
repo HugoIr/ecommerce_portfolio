@@ -87,6 +87,7 @@ class Wishlist extends StatelessWidget {
             space(),
             BlocBuilder<WishlistBloc, WishlistState>(
               builder: (context, state) {
+                print("REBUILD THE WISHLIST");
                 if (state is WishlistLoadedState) {
                   if (state.listsItem.isEmpty) {
                     return Center(
@@ -99,7 +100,10 @@ class Wishlist extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return SearchResult(list: state.listsItem);
+                    return SearchResult(
+                      list: state.listsItem,
+                      isForWishlist: true,
+                    );
                   }
                 } else {
                   return Center(

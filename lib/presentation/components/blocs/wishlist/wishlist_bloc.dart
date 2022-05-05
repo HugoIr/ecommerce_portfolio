@@ -12,6 +12,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   UserService userService;
   WishlistBloc({required this.userService}) : super(WishlistInitial()) {
     on<GetWishlistEvent>(_onGetWishlist);
+    on<ClickWishlistEvent>(_onClickWishlistEvent);
   }
 
   FutureOr<void> _onGetWishlist(
@@ -41,4 +42,17 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   //   // print("BLOC wishlist ${await userService.getCurrentWishlist()}");
   //   emit(WishlistAddedState());
   // }
+
+  FutureOr<void> _onClickWishlistEvent(
+      ClickWishlistEvent event, Emitter<WishlistState> emit) {
+    final state = this.state;
+    if (state is WishlistLoadedState) {
+      for (Item item in state.listsItem) {
+        if (item.id == event.id) {
+          item.isSelected = !item.isSelected;
+        }
+      }
+      emit(WishlistLoadedState(listsItem: state.listsItem));
+    }
+  }
 }
