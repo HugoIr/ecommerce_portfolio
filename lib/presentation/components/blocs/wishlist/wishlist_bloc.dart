@@ -47,11 +47,13 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       ClickWishlistEvent event, Emitter<WishlistState> emit) {
     final state = this.state;
     if (state is WishlistLoadedState) {
-      for (Item item in state.listsItem) {
-        if (item.id == event.id) {
-          item.isSelected = !item.isSelected;
-        }
-      }
+      // for (Item item in state.listsItem) {
+      //   if (item.id == event.id) {
+      //     item.isSelected = !item.isSelected;
+      //   }
+      // }
+      state.listsItem[event.index].isSelected =
+          !state.listsItem[event.index].isSelected;
       emit(WishlistLoadedState(listsItem: state.listsItem));
     }
   }

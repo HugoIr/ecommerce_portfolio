@@ -35,6 +35,7 @@ class SearchResult extends StatelessWidget {
         itemCount: list.length,
         itemBuilder: (buildContext, index) {
           return CardItem(
+            index: index,
             width: 170,
             xPadding: 14,
             id: list[index].id,

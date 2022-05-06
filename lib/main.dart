@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/utils/db_helper.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
 import 'package:funesia_clone/firebase_options.dart';
@@ -30,42 +31,49 @@ class Main extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (create) => PagesCubit()),
-        // BlocProvider(create: (create) => SearchResultBloc()),
-        BlocProvider(
-          create: (create) => AuthBloc(
-              authService: AuthService(firebaseAuth: firebaseAuth),
-              userService: UserService(firebaseFirestore: firebaseFirestore)),
-        ),
-        BlocProvider(
-            create: (create) => ForYouBloc(
-                userService: UserService(firebaseFirestore: firebaseFirestore))
-              ..add(GetForYouEvent(list: dummyItemsList))),
-      ],
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)),
-          home: StreamBuilder<User?>(
-              stream: firebaseAuth.authStateChanges(),
-              builder: (context, snapshot) {
-                return (snapshot.hasData) ? MainPage() : SignIn();
-              })
-          // return StreamBuilder<User?>(
-          //   stream: firebaseAuth.authStateChanges(),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData) {
-          //       print("snapshot ${snapshot.data}");
-          //       return MainPage();
-          //     }
-          //     print("snapshot kosong");
-          //     return SignUp();
-          //   },
-          // );
-
+    return ScreenUtilInit(
+      // designSize: Size(390, 844),
+      // minTextAdapt: true,
+      // splitScreenMode: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (create) => PagesCubit()),
+          // BlocProvider(create: (create) => SearchResultBloc()),
+          BlocProvider(
+            create: (create) => AuthBloc(
+                authService: AuthService(firebaseAuth: firebaseAuth),
+                userService: UserService(firebaseFirestore: firebaseFirestore)),
           ),
+          BlocProvider(
+              create: (create) => ForYouBloc(
+                  userService:
+                      UserService(firebaseFirestore: firebaseFirestore))
+                ..add(GetForYouEvent(list: dummyItemsList))),
+        ],
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                colorScheme:
+                    ColorScheme.fromSwatch(primarySwatch: Colors.blue)),
+            home: StreamBuilder<User?>(
+                stream: firebaseAuth.authStateChanges(),
+                builder: (context, snapshot) {
+                  return (snapshot.hasData) ? MainPage() : SignIn();
+                })
+            // return StreamBuilder<User?>(
+            //   stream: firebaseAuth.authStateChanges(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       print("snapshot ${snapshot.data}");
+            //       return MainPage();
+            //     }
+            //     print("snapshot kosong");
+            //     return SignUp();
+            //   },
+            // );
+
+            ),
+      ),
     );
   }
 }

@@ -14,12 +14,13 @@ class AddToWishlistEvent extends ForYouEvent {
   final String url;
   final double price;
   final double discount;
-  AddToWishlistEvent(
-      {required this.id,
-      required this.name,
-      required this.url,
-      required this.price,
-      required this.discount});
+  AddToWishlistEvent({
+    required this.id,
+    required this.name,
+    required this.url,
+    required this.price,
+    required this.discount,
+  });
 }
 
 class RemoveToWishlistEvent extends ForYouEvent {

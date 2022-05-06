@@ -17,49 +17,60 @@ class Item {
   });
 }
 
+class CartItem extends Item {
+  int total;
+  CartItem({
+    required int id,
+    required String name,
+    required String url,
+    required double price,
+    required this.total,
+  }) : super(id: id, name: name, url: url, price: price);
+}
+
 List<Item> dummyItemsList = [
   Item(
       id: 1,
       name: "12 Teknologi Lele Tingkatkan Laba",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
       id: 2,
       name: "Lele Tingkatkan Laba",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
       id: 3,
       name: "Teknologi Laba",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
       id: 4,
       name: "Lele Labadi",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
       id: 5,
       name: "Cat Lovers",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
       id: 6,
       name: "Atomic Habits",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
   Item(
-      id: 7, name: "Atomic", price: 72000, url: "${dummyPic}170", discount: 20),
+      id: 7, name: "Atomic", price: 72000, url: "${dummyPic}450", discount: 20),
   Item(
       id: 8,
       name: "5 AM Club",
       price: 72000,
-      url: "${dummyPic}170",
+      url: "${dummyPic}450",
       discount: 20),
 ];

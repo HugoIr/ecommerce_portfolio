@@ -264,3 +264,17 @@ Column testScrollable() {
     ],
   );
 }
+
+SnackBar customSnackBar(String text) {
+  return SnackBar(
+    content: Text(
+      text,
+      textAlign: TextAlign.center,
+    ),
+    padding: EdgeInsets.symmetric(vertical: 10),
+    duration: Duration(seconds: 1),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(50))),
+  );
+}

@@ -53,6 +53,7 @@ Widget gridItems(List<Item> list) {
           //   xPadding: 14,
           // );
           return CardItem(
+            index: index,
             width: 170,
             xPadding: 14,
             id: list[index].id,

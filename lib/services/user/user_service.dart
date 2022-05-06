@@ -78,6 +78,43 @@ class UserService {
     }
   }
 
+  dynamic getCurrentCart() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var cart;
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        cart = value.data()!["cart"];
+        // print("wishlist $wishlist");
+      });
+      return cart;
+    } else {
+      print("error");
+    }
+  }
+
+  Future<List<Item>> getListOfCurrentCart() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var cart;
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        cart = _convertMapToItem(value.data()!["cart"]);
+      });
+
+      return cart;
+    } else {
+      print("error");
+      return [];
+    }
+  }
+
   List<Item> _convertMapToItem(Map<String, dynamic> map) {
     List<Item> list = [];
     map.forEach((key, value) {
@@ -103,8 +140,14 @@ class UserService {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // print("currentwishlist $currentWishlist");
-        final updatedWishlist = await _addItemToExistingWishlist(
-            id: id, name: name, url: url, price: price, discount: discount);
+        var currentWishlist = await getCurrentWishlist();
+        final updatedWishlist = await _addItemToExistingList(
+            id: id,
+            name: name,
+            url: url,
+            price: price,
+            discount: discount,
+            list: currentWishlist);
 
         print("AddWishList service: wishlist after updated $updatedWishlist");
         if (updatedWishlist != null) {
@@ -129,7 +172,9 @@ class UserService {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final updatedWishlist = await _removeItemFromExistingWishlist(id: id);
+        var currentWishlist = await getCurrentWishlist();
+        final updatedWishlist =
+            await _removeItemFromExistingList(id: id, list: currentWishlist);
 
         print(
             "RemoveWishList service: wishlist after updated $updatedWishlist");
@@ -148,38 +193,136 @@ class UserService {
     }
   }
 
-  dynamic _addItemToExistingWishlist(
+  dynamic addToCart(
       {required int id,
       required String name,
       required String url,
       required double price,
       required double discount}) async {
-    var currentWishlist = await getCurrentWishlist();
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+        final updatedCart = await _addItemToExistingCart(
+          id: id,
+          name: name,
+          url: url,
+          price: price,
+          discount: discount,
+          list: currentCart,
+        );
 
-    if (currentWishlist.isEmpty || currentWishlist[id] == null) {
-      currentWishlist[id.toString()] = {
+        print("updatedCart service: updatedCart after updated $updatedCart");
+        if (updatedCart != null) {
+          await users.doc(user.uid).update({"cart": updatedCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+
+      print("updatedd");
+    } on FirebaseException catch (e) {
+      print("e $e");
+    } catch (e) {
+      print("e $e");
+    }
+  }
+
+  dynamic removeFromCart({
+    required int id,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+        final updatedCart =
+            await _removeItemFromExistingCart(id: id, list: currentCart);
+
+        print("RemoveCart service: updatedCart after updated $updatedCart");
+        if (updatedCart != null) {
+          await users.doc(user.uid).update({"cart": updatedCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+
+      print("removed");
+    } on FirebaseException catch (e) {
+      print("e $e");
+    } catch (e) {
+      print("e $e");
+    }
+  }
+
+  dynamic _addItemToExistingCart({
+    required int id,
+    required String name,
+    required String url,
+    required double price,
+    required double discount,
+    required Map list,
+  }) async {
+    if (list[id] == null) {
+      list[id.toString()] = {
+        "name": name,
+        "url": url,
+        "price": price,
+        "discount": discount,
+        "total": 1,
+      };
+      return list;
+    } else {
+      list[id.toString()]["total"]++;
+      return null;
+    }
+  }
+
+  dynamic _removeItemFromExistingCart({
+    required int id,
+    required Map list,
+  }) async {
+    list[id]["total"]--;
+
+    if (list[id]["total"] <= 0) {
+      list.remove(id.toString());
+    }
+    return list;
+  }
+
+  dynamic _addItemToExistingList({
+    required int id,
+    required String name,
+    required String url,
+    required double price,
+    required double discount,
+    required Map list,
+  }) async {
+    if (list[id] == null) {
+      list[id.toString()] = {
         "name": name,
         "url": url,
         "price": price,
         "discount": discount
       };
-      return currentWishlist;
+      return list;
     } else {
       print('elsa');
       return null;
     }
   }
 
-  dynamic _removeItemFromExistingWishlist({
+  dynamic _removeItemFromExistingList({
     required int id,
+    required Map list,
   }) async {
     print("id yg ingin diremove: $id");
-    var currentWishlist = await getCurrentWishlist();
 
-    if (currentWishlist.isNotEmpty || currentWishlist[id] != null) {
-      currentWishlist.remove(id.toString());
+    if (list.isNotEmpty || list[id] != null) {
+      list.remove(id.toString());
 
-      return currentWishlist;
+      return list;
     } else {
       print('elsa');
       return null;

@@ -6,8 +6,8 @@ abstract class WishlistEvent {}
 class GetWishlistEvent extends WishlistEvent {}
 
 class ClickWishlistEvent extends WishlistEvent {
-  final int id;
-  ClickWishlistEvent({required this.id});
+  final int index;
+  ClickWishlistEvent({required this.index});
 }
 
 // class AddToWishlistEvent extends WishlistEvent {

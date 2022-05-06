@@ -73,6 +73,7 @@ class _HomepageState extends State<Homepage> {
                       },
                       itemBuilder: (buildContext, index) {
                         return CardItem(
+                          index: index,
                           id: state.listsItem[index].id,
                           name: state.listsItem[index].name,
                           url: state.listsItem[index].url,
