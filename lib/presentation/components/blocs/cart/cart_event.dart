@@ -3,6 +3,8 @@ part of 'cart_bloc.dart';
 @immutable
 abstract class CartEvent {}
 
+class GetCartEvent extends CartEvent {}
+
 class AddToCartEvent extends CartEvent {
   final int id;
   final int index;
@@ -10,6 +12,7 @@ class AddToCartEvent extends CartEvent {
   final String url;
   final double price;
   final double discount;
+  final int total;
 
   AddToCartEvent({
     required this.id,
@@ -18,11 +21,15 @@ class AddToCartEvent extends CartEvent {
     required this.url,
     required this.price,
     required this.discount,
+    required this.total,
   });
 }
 
-class RemoveFromCartEvent extends CartEvent {
-  final int index;
+class RemoveCartItemEvent extends CartEvent {
   final int id;
-  RemoveFromCartEvent({required this.id, required this.index});
+  final int index;
+  RemoveCartItemEvent({
+    required this.id,
+    required this.index,
+  });
 }

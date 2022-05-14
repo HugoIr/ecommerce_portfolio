@@ -9,7 +9,6 @@ import 'package:funesia_clone/data/model/remote/item.dart';
 import 'package:funesia_clone/firebase_options.dart';
 import 'package:funesia_clone/presentation/components/blocs/auth/auth_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
-import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/pages/pages_cubit.dart';
 import 'package:funesia_clone/presentation/pages/auth/sign_in/sign_in.dart';
 import 'package:funesia_clone/presentation/pages/main_page/main_page.dart';
@@ -38,6 +37,7 @@ class Main extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (create) => PagesCubit()),
+
           // BlocProvider(create: (create) => SearchResultBloc()),
           BlocProvider(
             create: (create) => AuthBloc(

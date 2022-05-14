@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/cart/cart_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
+import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
+import 'package:funesia_clone/presentation/pages/checkout/checkout.dart';
 import 'package:funesia_clone/presentation/pages/search_page/search_page.dart';
 import 'package:funesia_clone/presentation/wishlist/wishlist.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
@@ -196,7 +199,21 @@ class AppBarHome extends StatelessWidget with PreferredSizeWidget {
         SizedBox(
           width: 12,
         ),
-        Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        GestureDetector(
+            onTap: (() {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (builder) => BlocProvider(
+                            create: (context) => CartBloc(
+                                userService: UserService(
+                                    firebaseFirestore:
+                                        FirebaseFirestore.instance))
+                              ..add(GetCartEvent()),
+                            child: Checkout(),
+                          )));
+            }),
+            child: Icon(Icons.shopping_cart_outlined, color: Colors.white)),
         SizedBox(
           width: 14,
         ),

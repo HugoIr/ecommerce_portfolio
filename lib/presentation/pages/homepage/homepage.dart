@@ -45,16 +45,6 @@ class _HomepageState extends State<Homepage> {
             ),
             space26(),
             BlocBuilder<ForYouBloc, ForYouState>(
-              // buildWhen: (previous, current) {
-              //   print("buildwhen PREVIOUS $previous");
-              //   if (previous is ForYouInitial) {
-              //     return true;
-              //   } else if (previous is LoadedForYouState) {
-              //     return false;
-              //   } else {
-              //     return false;
-              //   }
-              // },
               builder: (context, state) {
                 print("for you ui state $state");
                 if (state is LoadedForYouState) {

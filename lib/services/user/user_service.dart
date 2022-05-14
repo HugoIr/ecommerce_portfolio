@@ -26,6 +26,7 @@ class UserService {
           "uid": uid,
           "email": email,
           "wishlist": {},
+          "cart": {},
         })
         .then((_) => print("success add"))
         .catchError((e) => print("error $e"));
@@ -88,7 +89,14 @@ class UserService {
           .get()
           .then((value) {
         cart = value.data()!["cart"];
-        // print("wishlist $wishlist");
+        print("getCurrentCart cart $cart");
+        if (cart == null) {
+          firebaseFirestore
+              .collection("users")
+              .doc(user.uid)
+              .update({"cart": {}});
+          cart = {};
+        }
       });
       return cart;
     } else {
@@ -96,23 +104,23 @@ class UserService {
     }
   }
 
-  Future<List<Item>> getListOfCurrentCart() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      var cart;
-      await firebaseFirestore
-          .collection("users")
-          .doc(user.uid)
-          .get()
-          .then((value) {
-        cart = _convertMapToItem(value.data()!["cart"]);
-      });
+  Future<List<CartItem>> getListOfCurrentCart() async {
+    final cart = await getCurrentCart();
+    return _convertMapToCartItem(cart);
+  }
 
-      return cart;
-    } else {
-      print("error");
-      return [];
-    }
+  List<CartItem> _convertMapToCartItem(Map<String, dynamic> map) {
+    List<CartItem> list = [];
+    map.forEach((key, value) {
+      print("$key $value");
+      list.add(CartItem(
+          id: int.parse(key),
+          name: value["name"],
+          url: value["url"],
+          price: value["price"],
+          total: value["total"]));
+    });
+    return list;
   }
 
   List<Item> _convertMapToItem(Map<String, dynamic> map) {
@@ -193,17 +201,20 @@ class UserService {
     }
   }
 
-  dynamic addToCart(
-      {required int id,
-      required String name,
-      required String url,
-      required double price,
-      required double discount}) async {
+  dynamic addToCart({
+    required int id,
+    required String name,
+    required String url,
+    required double price,
+    required double discount,
+    required int total,
+  }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         var currentCart = await getCurrentCart();
+
         final updatedCart = await _addItemToExistingCart(
           id: id,
           name: name,
@@ -211,6 +222,7 @@ class UserService {
           price: price,
           discount: discount,
           list: currentCart,
+          total: total,
         );
 
         print("updatedCart service: updatedCart after updated $updatedCart");
@@ -223,13 +235,13 @@ class UserService {
 
       print("updatedd");
     } on FirebaseException catch (e) {
-      print("e $e");
+      print("error FirebaseException addtocart $e");
     } catch (e) {
-      print("e $e");
+      print("error general addtocart $e");
     }
   }
 
-  dynamic removeFromCart({
+  dynamic addCart({
     required int id,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
@@ -237,8 +249,148 @@ class UserService {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         var currentCart = await getCurrentCart();
-        final updatedCart =
-            await _removeItemFromExistingCart(id: id, list: currentCart);
+
+        currentCart[id.toString()]["total"] =
+            currentCart[id.toString()]["total"] + 1;
+        if (currentCart != null) {
+          await users.doc(user.uid).update({"cart": currentCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+    } on FirebaseException catch (e) {
+      print("error FirebaseException addtocart $e");
+    } catch (e) {
+      print("error general addtocart $e");
+    }
+  }
+
+  dynamic updateCartTotal({
+    required int id,
+    required int total,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+
+        if (currentCart != null) {
+          if (total >= 1) {
+            currentCart[id.toString()]["total"] = total;
+          } else {
+            currentCart[id.toString()]["total"] = 1;
+          }
+
+          await users.doc(user.uid).update({"cart": currentCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+    } on FirebaseException catch (e) {
+      print("error FirebaseException addtocart $e");
+    } catch (e) {
+      print("error general addtocart $e");
+    }
+  }
+
+  dynamic removeCartItem({
+    required int id,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+
+        if (currentCart != null) {
+          currentCart.remove(id.toString());
+          await users.doc(user.uid).update({"cart": currentCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+    } on FirebaseException catch (e) {
+      print("error FirebaseException addtocart $e");
+    } catch (e) {
+      print("error general addtocart $e");
+    }
+  }
+
+  dynamic reduceCart({
+    required int id,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+
+        int updatedTotal = currentCart[id.toString()]["total"] - 1;
+        if (currentCart != null && updatedTotal >= 1) {
+          currentCart[id.toString()]["total"] = updatedTotal;
+          await users.doc(user.uid).update({"cart": currentCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+    } on FirebaseException catch (e) {
+      print("error FirebaseException addtocart $e");
+    } catch (e) {
+      print("error general addtocart $e");
+    }
+  }
+
+  dynamic updateCart({
+    required int id,
+    required String name,
+    required String url,
+    required double price,
+    required double discount,
+    required int total,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+        final updatedCart = await _addItemToExistingCart(
+          id: id,
+          name: name,
+          url: url,
+          price: price,
+          discount: discount,
+          list: currentCart,
+          total: total,
+        );
+
+        print("updatedCart service: updatedCart after updated $updatedCart");
+        if (updatedCart != null) {
+          await users.doc(user.uid).update({"cart": updatedCart});
+        }
+      } else {
+        print("login dlu dong");
+      }
+
+      print("updatedd");
+    } on FirebaseException catch (e) {
+      print("error FirebaseException addtocart $e");
+    } catch (e) {
+      print("error general addtocart $e");
+    }
+  }
+
+  dynamic removeFromCart({
+    required int id,
+    required int total,
+  }) async {
+    CollectionReference users = firebaseFirestore.collection("users");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        var currentCart = await getCurrentCart();
+        final updatedCart = await _removeItemFromExistingCart(
+            id: id, list: currentCart, total: total);
 
         print("RemoveCart service: updatedCart after updated $updatedCart");
         if (updatedCart != null) {
@@ -263,27 +415,32 @@ class UserService {
     required double price,
     required double discount,
     required Map list,
+    required int total,
   }) async {
-    if (list[id] == null) {
+    print("DESIRED TOTAL $total");
+    if (list[id.toString()] == null) {
       list[id.toString()] = {
         "name": name,
         "url": url,
         "price": price,
         "discount": discount,
-        "total": 1,
+        "total": total,
       };
       return list;
     } else {
-      list[id.toString()]["total"]++;
-      return null;
+      print("EXisting ${list[id.toString()]["total"]}");
+
+      list[id.toString()]["total"] = list[id.toString()]["total"] + total;
+      return list;
     }
   }
 
   dynamic _removeItemFromExistingCart({
     required int id,
     required Map list,
+    required int total,
   }) async {
-    list[id]["total"]--;
+    list[id]["total"] = total;
 
     if (list[id]["total"] <= 0) {
       list.remove(id.toString());

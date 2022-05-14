@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
+import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/pages/detail_item/detail_item_page.dart';
 
@@ -43,8 +44,17 @@ class CardItem extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (builder) => DetailItemPage(
-                    index: index, id: id, name: name, url: url, price: price)));
+                builder: (builder) => BlocProvider(
+                      create: (context) => ItemCounterCubit(),
+                      child: DetailItemPage(
+                        index: index,
+                        id: id,
+                        name: name,
+                        url: url,
+                        price: price,
+                        discount: discount,
+                      ),
+                    )));
       },
       child: Material(
         borderRadius: BorderRadius.circular(10),

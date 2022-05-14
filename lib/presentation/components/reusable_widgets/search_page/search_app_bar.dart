@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
+import 'package:funesia_clone/presentation/pages/checkout/checkout.dart';
 
 class SearchAppBar extends StatelessWidget with PreferredSizeWidget {
   const SearchAppBar({
@@ -70,9 +71,15 @@ class SearchAppBar extends StatelessWidget with PreferredSizeWidget {
         SizedBox(
           width: 12,
         ),
-        Icon(
-          Icons.shopping_cart_rounded,
-          color: Colors.grey[600],
+        GestureDetector(
+          onTap: (() {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (builder) => Checkout()));
+          }),
+          child: Icon(
+            Icons.shopping_cart_rounded,
+            color: Colors.grey[600],
+          ),
         ),
         SizedBox(
           width: 20,
