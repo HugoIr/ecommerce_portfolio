@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:funesia_clone/data/model/remote/chat/chat_channel.dart';
+import 'package:funesia_clone/data/model/remote/chat/chat_message.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
 
 class UserService {
   FirebaseFirestore firebaseFirestore;
-
+  final user = FirebaseAuth.instance.currentUser;
+  final chatChannelCollection =
+      FirebaseFirestore.instance.collection("chat_channel");
+  final userCollection = FirebaseFirestore.instance.collection("users");
   UserService({required this.firebaseFirestore});
 
   Future<dynamic> getListsId() async {
@@ -27,6 +32,7 @@ class UserService {
           "email": email,
           "wishlist": {},
           "cart": {},
+          "chatConnection": {},
         })
         .then((_) => print("success add"))
         .catchError((e) => print("error $e"));
@@ -484,5 +490,116 @@ class UserService {
       print('elsa');
       return null;
     }
+  }
+
+  dynamic createChannel(
+      List<String> usersId, List<ChatMessage> messages) async {
+    ChatChannel chatChannel = ChatChannel(usersId: usersId, messages: messages);
+    await FirebaseFirestore.instance
+        .collection("chat_channel")
+        .add(chatChannel.toJson(chatChannel))
+        .then((value) {
+      print("VALUE after create channel ${value.id}");
+      chatChannel.id = value.id;
+    });
+    return chatChannel;
+  }
+
+  Future<Map<String, dynamic>?> getChatConnection() async {
+    Map<String, dynamic>? chatConnection;
+    await userCollection.doc(user!.uid).get().then((map) {
+      chatConnection = map.data()!["chatConnection"];
+    });
+    return chatConnection;
+  }
+
+  Future<Map<String, dynamic>?> createChatConnection(
+      String idTo, String channelId) async {
+    await userCollection.doc(user!.uid).get().then((doc) {
+      print("doc createChatConnection ${doc.data()}");
+      if (doc.data()!["chatConnection"] == null) {
+        print("if no chatconn");
+        Map<String, dynamic> newChatConnection = {
+          idTo: {"channelId": channelId},
+        };
+        userCollection.doc(user!.uid).set(newChatConnection);
+        return newChatConnection;
+      } else {
+        print("else append");
+        // append
+        final updatedMap = doc.data();
+        updatedMap!["chatConnection"][idTo] = {"channelId": channelId};
+
+        userCollection.doc(user!.uid).update(updatedMap);
+        return updatedMap;
+      }
+    });
+    // return {};
+  }
+
+  Future<ChatChannel> setupChannel(String idTo) async {
+    String channelId;
+    ChatChannel newChannel;
+    Map<String, dynamic>? chatConnection = await getChatConnection();
+    if (chatConnection == null) {
+      userCollection.doc(user!.uid).update({"chatConnection": {}});
+      newChannel = await createChannel([user!.uid, idTo], []);
+      channelId = newChannel.id!;
+      print("newChannel id $channelId");
+
+      createChatConnection(idTo, channelId);
+    } else if (chatConnection[idTo] != null) {
+      channelId = chatConnection[idTo]["channelId"];
+      print("setupChannel chatConnection[idTo] != null w/ ch id $channelId");
+      newChannel = await getChatChannel(channelId);
+      newChannel.id = channelId;
+      print("AFter getchatcahnnel $newChannel");
+    } else {
+      newChannel = await createChannel([user!.uid, idTo], []);
+      channelId = newChannel.id!;
+      createChatConnection(idTo, channelId);
+    }
+    return newChannel;
+  }
+
+  Future<ChatChannel> getChatChannel(String channelId) async {
+    var map;
+    print("getChatChannel");
+    await chatChannelCollection.doc(channelId).get().then((value) {
+      print("valuesss $value");
+      map = value.data()!;
+    });
+    print("getChatChannel bawah");
+    return ChatChannel.fromJson(map);
+  }
+
+  dynamic addToChatChannel(String channelId, ChatMessage message) async {
+    var docChatChannel;
+    await chatChannelCollection.doc(channelId).get().then((value) {
+      docChatChannel = value.data();
+    });
+    if (docChatChannel["messages"].length > 0) {
+      List newList = docChatChannel["messages"];
+      newList.add(message.toJson());
+
+      chatChannelCollection.doc(channelId).update({"messages": newList});
+    } else {
+      chatChannelCollection.doc(channelId).update({
+        "messages": [message.toJson()]
+      });
+    }
+  }
+
+  Future<ChatMessage> sendMessage(
+      String channelId, String idTo, dynamic content, int type) async {
+    ChatMessage message = ChatMessage(
+      idFrom: user!.uid,
+      idTo: idTo,
+      content: content,
+      type: type,
+      timestamp: DateTime.now().toIso8601String(),
+    );
+    await addToChatChannel(channelId, message);
+    return message;
   }
 }

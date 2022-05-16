@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/cubits/cubit/type_message_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/custom_sliver_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/search_page/search_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:funesia_clone/presentation/pages/chat/chat_room.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 
 class DetailItemPage extends StatelessWidget {
@@ -196,17 +200,39 @@ class DetailItemPage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: Color.fromARGB(255, 89, 204, 93), width: 2)),
-              child: Icon(
-                Icons.chat_outlined,
-                size: 20,
-                color: Color.fromARGB(255, 89, 204, 93),
-              )),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (builder) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (context) => TypeMessageCubit(),
+                              ),
+                              BlocProvider(
+                                  create: (context) => ChatBloc(
+                                      userService: UserService(
+                                          firebaseFirestore:
+                                              FirebaseFirestore.instance))
+                                    ..add(SetupChatEvent(
+                                        idTo: "kABVdBN7t9N6QCCWima9dsOVCP43"))),
+                            ],
+                            child: ChatRoom(),
+                          )));
+            },
+            child: Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: Color.fromARGB(255, 89, 204, 93), width: 2)),
+                child: Icon(
+                  Icons.chat_outlined,
+                  size: 20,
+                  color: Color.fromARGB(255, 89, 204, 93),
+                )),
+          ),
           itemInput(context),
           Material(
             color: Colors.blueAccent[700],
