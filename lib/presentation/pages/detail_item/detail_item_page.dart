@@ -216,7 +216,7 @@ class DetailItemPage extends StatelessWidget {
                                           firebaseFirestore:
                                               FirebaseFirestore.instance))
                                     ..add(SetupChatEvent(
-                                        idTo: "kABVdBN7t9N6QCCWima9dsOVCP43"))),
+                                        idTo: "vRmcsVjtkTfQ4tQxmdPXGYwiIuK2"))),
                             ],
                             child: ChatRoom(),
                           )));

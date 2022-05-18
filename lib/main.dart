@@ -31,9 +31,9 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      // designSize: Size(390, 844),
-      // minTextAdapt: true,
-      // splitScreenMode: true,
+      designSize: const Size(390, 844),
+      minTextAdapt: true,
+      splitScreenMode: true,
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (create) => PagesCubit()),

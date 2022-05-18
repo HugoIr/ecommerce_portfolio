@@ -58,7 +58,7 @@ class UserService {
           .get()
           .then((value) {
         wishlist = value.data()!["wishlist"];
-        // print("wishlist $wishlist");
+        print("wishlist $wishlist");
       });
       return wishlist;
     } else {
@@ -514,23 +514,24 @@ class UserService {
   }
 
   Future<Map<String, dynamic>?> createChatConnection(
-      String idTo, String channelId) async {
-    await userCollection.doc(user!.uid).get().then((doc) {
+      String idFrom, String idTo, String channelId) async {
+    await userCollection.doc(idFrom).get().then((doc) {
       print("doc createChatConnection ${doc.data()}");
       if (doc.data()!["chatConnection"] == null) {
-        print("if no chatconn");
         Map<String, dynamic> newChatConnection = {
           idTo: {"channelId": channelId},
         };
-        userCollection.doc(user!.uid).set(newChatConnection);
+        userCollection.doc(idFrom).set(newChatConnection);
+        print("if no chatconn new conn $newChatConnection");
+
         return newChatConnection;
       } else {
         print("else append");
         // append
         final updatedMap = doc.data();
         updatedMap!["chatConnection"][idTo] = {"channelId": channelId};
-
-        userCollection.doc(user!.uid).update(updatedMap);
+        print("Updatedd map $updatedMap");
+        userCollection.doc(idFrom).update(updatedMap);
         return updatedMap;
       }
     });
@@ -547,7 +548,8 @@ class UserService {
       channelId = newChannel.id!;
       print("newChannel id $channelId");
 
-      createChatConnection(idTo, channelId);
+      createChatConnection(user!.uid, idTo, channelId);
+      createChatConnection(idTo, user!.uid, channelId);
     } else if (chatConnection[idTo] != null) {
       channelId = chatConnection[idTo]["channelId"];
       print("setupChannel chatConnection[idTo] != null w/ ch id $channelId");
@@ -557,7 +559,8 @@ class UserService {
     } else {
       newChannel = await createChannel([user!.uid, idTo], []);
       channelId = newChannel.id!;
-      createChatConnection(idTo, channelId);
+      createChatConnection(user!.uid, idTo, channelId);
+      createChatConnection(idTo, user!.uid, channelId);
     }
     return newChannel;
   }

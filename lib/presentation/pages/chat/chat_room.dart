@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/cubit/type_message_cubit.dart';
 
@@ -47,142 +48,142 @@ class ChatRoom extends StatelessWidget {
       body: BlocBuilder<ChatBloc, ChatState>(
         builder: (context, state) {
           if (state is ChatLoaded) {
-            return Stack(children: [
-              Positioned(
-                top: 20,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Container(
-                    width: 400,
-                    height: 800,
-                    child: BlocBuilder<ChatBloc, ChatState>(
-                      builder: (context, state) {
-                        if (state is ChatLoaded) {
-                          // print(
-                          //     "STATE ui ${state.chatChannel.messages[0]["content"]}");
-                          return ListView.separated(
-                              itemCount: state.chatChannel.messages.length,
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 20,
-                                );
-                              },
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 16),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(20),
-                                          bottomRight: Radius.circular(20),
-                                          topRight: Radius.circular(20))),
-                                  child: Text(state.chatChannel.messages[index]
-                                      ["content"]),
-                                );
-                              });
-                        } else if (state is ChatInitial) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          return SizedBox();
-                        }
-                      },
-                    ),
+            return Container(
+              width: double.infinity,
+              height: 844.w,
+              child: Stack(children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  child: BlocBuilder<ChatBloc, ChatState>(
+                    builder: (context, state) {
+                      if (state is ChatLoaded) {
+                        return ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.chatChannel.messages.length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(
+                                height: 20,
+                              );
+                            },
+                            itemBuilder: (context, index) {
+                              return Row(
+                                textDirection: (state.chatChannel
+                                            .messages[index]["idTo"] ==
+                                        state.idTo)
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
+                                children: [
+                                  Flexible(child: _chatBox(state, index)),
+                                  SizedBox(
+                                    width: 80,
+                                  )
+                                ],
+                              );
+                            });
+                      } else if (state is ChatInitial) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
                   ),
                 ),
-              ),
-              Positioned(
-                  right: 0,
-                  left: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: double.infinity,
-                    height: 100,
-                    // decoration: BoxDecoration(color: Colors.amber),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                    offset: Offset(0, 0.5),
-                                    blurRadius: 1,
-                                    spreadRadius: 0,
-                                    blurStyle: BlurStyle.solid,
-                                    color: Colors.black12)
-                              ]),
-                          width: 300,
-                          height: 42,
-                          child: TextField(
-                            onChanged: (val) {
-                              context.read<TypeMessageCubit>().onType(val);
-                            },
-                            cursorColor: Colors.grey[600],
-                            controller: chatController,
-                            decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 12),
-                                isDense: true,
-                                isCollapsed: true,
-                                hintText: "Message",
-                                hintStyle: TextStyle(
-                                    color: Colors.grey[600]!.withOpacity(0.6)),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                prefixIcon: Icon(
-                                  Icons.tag_faces_rounded,
-                                  size: 24,
-                                  color: Colors.black45,
-                                ),
-                                suffixIcon: Icon(
-                                  Icons.add_circle_outline_rounded,
-                                  size: 24,
-                                  color: Colors.black45,
-                                )),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        BlocBuilder<TypeMessageCubit, bool>(
-                          builder: (context, isType) {
-                            return InkWell(
-                              onTap: () {
-                                if (isType) {
-                                  context.read<ChatBloc>()
-                                    ..add(SendChatEvent(
-                                        content: chatController.text, type: 1));
-
-                                  chatController.clear();
-                                }
+                Positioned(
+                    right: 0,
+                    left: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 100,
+                      // decoration: BoxDecoration(color: Colors.amber),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 0.5),
+                                      blurRadius: 1,
+                                      spreadRadius: 0,
+                                      blurStyle: BlurStyle.solid,
+                                      color: Colors.black12)
+                                ]),
+                            width: 300,
+                            height: 42,
+                            child: TextField(
+                              onChanged: (val) {
+                                context.read<TypeMessageCubit>().onType(val);
                               },
-                              child: Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+                              cursorColor: Colors.grey[600],
+                              controller: chatController,
+                              decoration: InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 12),
+                                  isDense: true,
+                                  isCollapsed: true,
+                                  hintText: "Message",
+                                  hintStyle: TextStyle(
+                                      color:
+                                          Colors.grey[600]!.withOpacity(0.6)),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  prefixIcon: Icon(
+                                    Icons.tag_faces_rounded,
+                                    size: 24,
+                                    color: Colors.black45,
+                                  ),
+                                  suffixIcon: Icon(
+                                    Icons.add_circle_outline_rounded,
+                                    size: 24,
+                                    color: Colors.black45,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          BlocBuilder<TypeMessageCubit, bool>(
+                            builder: (context, isType) {
+                              return InkWell(
+                                onTap: () {
+                                  if (isType) {
+                                    context.read<ChatBloc>()
+                                      ..add(SendChatEvent(
+                                          content: chatController.text,
+                                          type: 1));
+
+                                    chatController.clear();
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: isType
+                                          ? Colors.blueAccent[700]
+                                          : Colors.grey[300]!.withOpacity(0.6)),
+                                  child: Icon(
+                                    Icons.send_rounded,
                                     color: isType
-                                        ? Colors.blueAccent[700]
-                                        : Colors.grey[300]!.withOpacity(0.6)),
-                                child: Icon(
-                                  Icons.send_rounded,
-                                  color: isType
-                                      ? Colors.white
-                                      : Colors.white.withOpacity(0.6),
-                                  size: 20,
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.6),
+                                    size: 20,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        )
-                      ]),
-                    ),
-                  )),
-            ]);
+                              );
+                            },
+                          )
+                        ]),
+                      ),
+                    )),
+              ]),
+            );
           } else if (state is ChatInitial) {
             return Center(
               child: CircularProgressIndicator(),
@@ -192,6 +193,19 @@ class ChatRoom extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Widget _chatBox(ChatLoaded state, int index) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+              topRight: Radius.circular(20))),
+      child: Text(state.chatChannel.messages[index]["content"]),
     );
   }
 }
