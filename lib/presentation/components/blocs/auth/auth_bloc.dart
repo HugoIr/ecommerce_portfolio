@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/services/auth/auth_service.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 import 'package:meta/meta.dart';
@@ -12,8 +13,11 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthService authService;
   UserService userService;
-
-  AuthBloc({required this.authService, required this.userService})
+  UserBloc userBloc;
+  AuthBloc(
+      {required this.authService,
+      required this.userService,
+      required this.userBloc})
       : super(AuthInitial()) {
     on<SignUpWithEmailPasswordEvent>(_onSignUpWithEmailPassword);
     on<SignInWithEmailPasswordEvent>(_onSignInWithEmailPassword);
@@ -28,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         (userCredential) {
       userService.addNewUser(
           userCredential.user!.uid, userCredential.user!.email!);
+      userBloc..add(GetUserInformationEvent());
       emit(LoggedInState(userCredential: userCredential));
     });
   }
@@ -36,9 +41,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SignInWithEmailPasswordEvent event, Emitter<AuthState> emit) async {
     final result = await authService.signIn(event.email, event.password);
     print("_onSignInWithEmailPassword");
-    result.fold(
-        (failure) => print("Failed to signIn ${failure.message}"),
-        (userCredential) =>
-            emit(LoggedInState(userCredential: userCredential)));
+    result.fold((failure) => print("Failed to signIn ${failure.message}"),
+        (userCredential) {
+      userBloc..add(GetUserInformationEvent());
+      emit(LoggedInState(userCredential: userCredential));
+    });
   }
 }

@@ -9,6 +9,7 @@ import 'package:funesia_clone/data/model/remote/item.dart';
 import 'package:funesia_clone/firebase_options.dart';
 import 'package:funesia_clone/presentation/components/blocs/auth/auth_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/pages/pages_cubit.dart';
 import 'package:funesia_clone/presentation/pages/auth/sign_in/sign_in.dart';
 import 'package:funesia_clone/presentation/pages/main_page/main_page.dart';
@@ -26,6 +27,8 @@ void main() async {
 class Main extends StatelessWidget {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  UserBloc userBloc = UserBloc(
+      userService: UserService(firebaseFirestore: FirebaseFirestore.instance));
   Main({Key? key}) : super(key: key);
 
   @override
@@ -37,12 +40,15 @@ class Main extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (create) => PagesCubit()),
-
-          // BlocProvider(create: (create) => SearchResultBloc()),
           BlocProvider(
             create: (create) => AuthBloc(
-                authService: AuthService(firebaseAuth: firebaseAuth),
-                userService: UserService(firebaseFirestore: firebaseFirestore)),
+              authService: AuthService(firebaseAuth: firebaseAuth),
+              userService: UserService(firebaseFirestore: firebaseFirestore),
+              userBloc: userBloc,
+            ),
+          ),
+          BlocProvider(
+            create: (create) => userBloc..add(GetUserInformationEvent()),
           ),
           BlocProvider(
               create: (create) => ForYouBloc(

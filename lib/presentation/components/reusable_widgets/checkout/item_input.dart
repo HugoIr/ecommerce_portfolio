@@ -39,7 +39,7 @@ class ItemInput extends StatelessWidget {
               totalItemController.text = currentCounter.toString();
               totalItemController.selection = TextSelection.fromPosition(
                   TextPosition(offset: currentCounter.toString().length));
-              print("CURR COUNTE R $currentCounter");
+
               return Container(
                 width: 40,
                 child: TextField(

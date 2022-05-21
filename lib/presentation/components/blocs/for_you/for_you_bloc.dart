@@ -29,6 +29,9 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
         url: item.url,
         price: item.price,
         discount: item.discount,
+        idSeller: item.idSeller,
+        sellerName: item.sellerName,
+        stock: item.stock,
       ));
     }
     return newList;
@@ -36,7 +39,6 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
 
   FutureOr<void> _onGetForYou(
       GetForYouEvent event, Emitter<ForYouState> emit) async {
-    print("BRUDHH");
     var listsId = await userService.getListsId();
     print("listId $listsId");
 
@@ -68,6 +70,8 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
         url: event.url,
         price: event.price,
         discount: event.discount,
+        idSeller: event.idSeller,
+        sellerName: event.sellerName,
       );
       emit(LoadedForYouState(listsItem: state.listsItem));
     }

@@ -19,6 +19,8 @@ class DetailItemPage extends StatelessWidget {
   final String url;
   final double price;
   final double? discount;
+  final String idSeller;
+  final String sellerName;
   DetailItemPage({
     Key? key,
     required this.index,
@@ -26,6 +28,8 @@ class DetailItemPage extends StatelessWidget {
     required this.name,
     required this.url,
     required this.price,
+    required this.idSeller,
+    required this.sellerName,
     this.discount,
   }) : super(key: key);
   TextEditingController searchController = TextEditingController();
@@ -62,7 +66,7 @@ class DetailItemPage extends StatelessWidget {
                             _priceAndIcons(context),
                             space(),
                             Text(
-                              "Judul Buku",
+                              name,
                               style: TextStyle(fontSize: 16),
                             ),
                             space(),
@@ -79,7 +83,7 @@ class DetailItemPage extends StatelessWidget {
                                       child: officialStoreIcon(),
                                     )),
                                     TextSpan(
-                                      text: "Nama toko",
+                                      text: sellerName,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 12),
@@ -293,7 +297,7 @@ class DetailItemPage extends StatelessWidget {
               totalItemController.text = currentCounter.toString();
               totalItemController.selection = TextSelection.fromPosition(
                   TextPosition(offset: currentCounter.toString().length));
-              print("CURR COUNTE R $currentCounter");
+
               return Container(
                 width: 40,
                 child: TextField(
@@ -343,7 +347,7 @@ class DetailItemPage extends StatelessWidget {
       children: [
         Image.network(
           url,
-          scale: 0.5,
+          width: double.infinity,
         ),
         Positioned(
           bottom: 0,
@@ -427,7 +431,7 @@ class DetailItemPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          "Rp72.000",
+          "Rp${price.toInt()}",
           style: TextStyle(
               color: Colors.teal[300], fontSize: 24, letterSpacing: 0.08),
         ),
@@ -448,17 +452,20 @@ class DetailItemPage extends StatelessWidget {
               bool isFavourite = state.listsItem
                   .firstWhere((item) => item.id == id)
                   .isSelected;
-              print("IS FAV $isFavourite");
+
               return InkWell(
                 onTap: () {
                   if (!isFavourite) {
                     context.read<ForYouBloc>()
                       ..add(AddToWishlistEvent(
-                          id: id,
-                          name: name,
-                          url: url,
-                          price: price,
-                          discount: discount!));
+                        id: id,
+                        name: name,
+                        url: url,
+                        price: price,
+                        discount: discount!,
+                        idSeller: idSeller,
+                        sellerName: sellerName,
+                      ));
                   } else {
                     context.read<ForYouBloc>()
                       ..add(RemoveToWishlistEvent(id: id));

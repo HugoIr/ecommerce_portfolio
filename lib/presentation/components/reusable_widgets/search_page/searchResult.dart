@@ -44,6 +44,8 @@ class SearchResult extends StatelessWidget {
             price: list[index].price,
             discount: list[index].discount,
             isSelected: list[index].isSelected,
+            idSeller: list[index].idSeller,
+            sellerName: list[index].sellerName,
             isForFilter: isForFilter,
             isForWishlist: isForWishlist,
           );

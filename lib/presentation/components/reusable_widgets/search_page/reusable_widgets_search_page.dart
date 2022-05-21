@@ -61,6 +61,8 @@ Widget gridItems(List<Item> list) {
             url: list[index].url,
             price: list[index].price,
             discount: list[index].discount,
+            idSeller: list[index].idSeller,
+            sellerName: list[index].sellerName,
           );
         }),
   );

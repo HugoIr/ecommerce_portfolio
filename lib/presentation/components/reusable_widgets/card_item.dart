@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:funesia_clone/common/constant.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/wishlist/wishlist_bloc.dart';
@@ -13,6 +14,8 @@ class CardItem extends StatelessWidget {
   final String name;
   final String url;
   final double price;
+  final String idSeller;
+  final String sellerName;
   bool isSelected = false;
   final double? discount;
   double width = 130;
@@ -28,6 +31,8 @@ class CardItem extends StatelessWidget {
     required this.name,
     required this.url,
     required this.price,
+    required this.idSeller,
+    required this.sellerName,
     this.isSelected = false,
     this.discount,
     this.width = 130,
@@ -53,6 +58,8 @@ class CardItem extends StatelessWidget {
                         url: url,
                         price: price,
                         discount: discount,
+                        idSeller: idSeller,
+                        sellerName: sellerName,
                       ),
                     )));
       },
@@ -72,7 +79,10 @@ class CardItem extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10)),
-                child: Image.network(url),
+                child: Image.network(
+                  url,
+                  width: double.infinity,
+                ),
               ),
               Container(
                 // width: 70,
@@ -132,25 +142,18 @@ class CardItem extends StatelessWidget {
                               if (!isSelected) {
                                 BlocProvider.of<ForYouBloc>(context)
                                   ..add(AddToWishlistEvent(
-                                      id: id,
-                                      name: name,
-                                      url: url,
-                                      price: price,
-                                      discount: discount!));
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  customSnackBar(
-                                      "Berhasil ditambahkan ke Wishlist"),
-                                );
+                                    id: id,
+                                    name: name,
+                                    url: url,
+                                    price: price,
+                                    discount: discount!,
+                                    idSeller: idSeller,
+                                    sellerName: sellerName,
+                                  ));
                               } else {
                                 context
                                     .read<ForYouBloc>()
                                     .add(RemoveToWishlistEvent(id: id));
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  customSnackBar(
-                                      "Berhasil dihapus dari Wishlist"),
-                                );
                               }
                               if (isForFilter) {
                                 context.read<SearchResultBloc>()
@@ -183,12 +186,9 @@ class CardItem extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            "Rp72.000",
-                            style: TextStyle(
-                                fontSize: 11,
-                                decoration: TextDecoration.lineThrough),
-                          ),
+                          Text("Rp72.000",
+                              style: subTextStyle.copyWith(
+                                  decoration: TextDecoration.lineThrough)),
                           SizedBox(
                             width: 4,
                           ),

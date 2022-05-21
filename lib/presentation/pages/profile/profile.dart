@@ -1,6 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
+import 'package:funesia_clone/presentation/components/reusable_widgets/profile/reusable_widget_profile.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/pages/auth/sign_out/sign_out.dart';
+import 'package:funesia_clone/presentation/pages/seller/my_store.dart';
 import 'package:path/path.dart';
 
 class Profile extends StatelessWidget {
@@ -19,13 +25,20 @@ class Profile extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            Text(
-              "My Profile",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Profile",
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+                ),
+                btnTokoSaya()
+              ],
             ),
             space(),
-            rowIdentity(context),
-            space(),
+            rowIdentity(context, "Budi Setiawan",
+                FirebaseAuth.instance.currentUser?.email, "085123124324"),
+
             btnBukaStore(),
             SizedBox(
               height: 10,
@@ -46,178 +59,161 @@ class Profile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Pesanan Saya",
-                      style: TextStyle(fontSize: 18),
+                      "My Purchases",
+                      style: TextStyle(fontSize: 16),
                     ),
                     SizedBox(
-                      height: 16,
+                      height: 20,
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           opsiPesananSaya(
                             asset: "assets/profile/wallet.png",
-                            text: "Belum Bayar",
+                            text: "To Pay",
                           ),
-                          spaceHorizontal(),
+                          Spacer(
+                            flex: 1,
+                          ),
                           opsiPesananSaya(
                             asset: "assets/profile/shopping_bag.png",
-                            text: "Dikemas",
+                            text: "To Ship",
                           ),
-                          spaceHorizontal(),
+                          Spacer(
+                            flex: 1,
+                          ),
                           opsiPesananSaya(
                             asset: "assets/profile/van_cargo.png",
-                            text: "Dikirim",
+                            text: "To Receive",
                           ),
-                          spaceHorizontal(),
+                          Spacer(
+                            flex: 1,
+                          ),
                           opsiPesananSaya(
-                            asset: "assets/profile/invoice.png",
-                            text: "Selesai",
+                            asset: "assets/profile/star.png",
+                            text: "To Rate",
                           ),
-                          spaceHorizontal(),
                         ],
                       ),
                     )
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 20),
+            // BlocBuilder<UserBloc, UserState>(
+            //   builder: (context, state) {
+            //     if (state is UserLoaded && state.isSeller) {
+            //       return InkWell(
+            //         onTap: () {},
+            //         child: Container(
+            //           width: double.infinity,
+            //           padding:
+            //               EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            //           decoration: BoxDecoration(
+            //             color: Colors.grey[50],
+            //             borderRadius: BorderRadius.circular(10),
+            //           ),
+            //           child: Row(
+            //             children: [
+            //               Icon(
+            //                 Icons.store_rounded,
+            //                 color: Colors.grey[700],
+            //               ),
+            //               SizedBox(
+            //                 width: 8,
+            //               ),
+            //               Text(
+            //                 "Toko Saya",
+            //                 style: TextStyle(
+            //                   fontSize: 14,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       );
+            //     } else {
+            //       return const SizedBox();
+            //     }
+            //   },
+            // )
           ]),
     ));
   }
 
-  SizedBox spaceHorizontal() {
-    return SizedBox(
-      width: 24,
-    );
-  }
-
-  Column opsiPesananSaya({required String asset, required String text}) {
-    return Column(
-      children: [
-        Image.asset(
-          asset,
-          width: 30,
-          height: 30,
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        Container(
-          width: 40,
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
-          ),
-        )
-      ],
-    );
-  }
-
-  InkWell btnBukaStore() {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        width: double.infinity,
-        height: 56,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            color: const Color.fromARGB(255, 229, 161, 60)),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: -5,
-              left: 16,
-              child: Image.asset(
-                "assets/profile/kitty.png",
-                width: 44,
-                height: 44,
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                "Buka Store Sekarang!",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-            Container(
-                padding: EdgeInsets.only(right: 16),
-                alignment: Alignment.centerRight,
-                child: rightArrow(color: Colors.white, widthBorder: 0.75))
-          ],
-        ),
-      ),
-    );
-  }
-
-  SizedBox rowIdentity(context) {
-    return SizedBox(
-      height: 100,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: Colors.yellow[600]),
-            child: Image.asset(
-              "assets/profile/smile_face.png",
-              color: Colors.blueAccent[700],
-              width: 54,
-              height: 54,
-            ),
-          ),
-          Spacer(
-            flex: 1,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                "Budi Setiawan",
-                style: TextStyle(fontSize: 20),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "budisetiawan@gmail.com",
-                style: TextStyle(fontSize: 12),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Text(
-                "0851323128429",
-                style: TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          Spacer(
-            flex: 2,
-          ),
-          InkWell(
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (builder) => SignOut())),
+  BlocBuilder<UserBloc, UserState> btnTokoSaya() {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLoaded && state.isSeller) {
+          return InkWell(
+            borderRadius: BorderRadius.circular(10.r),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (builder) => const MyStore()));
+            },
             child: Container(
-              height: double.infinity,
-              alignment: Alignment.topCenter,
-              child: const Icon(
-                Icons.settings,
-                color: Color.fromARGB(255, 110, 110, 110),
+              // width: double.infinity,
+              padding:
+                  EdgeInsets.only(left: 14, right: 10, top: 10, bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "My Store",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 4,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                  )
+                ],
               ),
             ),
-          )
-        ],
-      ),
+          );
+        } else if (state is UserInitial) {
+          return Container(
+            // width: double.infinity,
+            padding: EdgeInsets.only(left: 14, right: 10, top: 10, bottom: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "My Store",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                )
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

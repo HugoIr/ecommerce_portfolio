@@ -69,6 +69,8 @@ class _HomepageState extends State<Homepage> {
                           url: state.listsItem[index].url,
                           price: state.listsItem[index].price,
                           discount: state.listsItem[index].discount,
+                          idSeller: state.listsItem[index].idSeller,
+                          sellerName: state.listsItem[index].sellerName,
                           isSelected: state.listsItem[index].isSelected,
                         );
                       },

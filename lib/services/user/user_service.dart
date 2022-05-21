@@ -120,11 +120,15 @@ class UserService {
     map.forEach((key, value) {
       print("$key $value");
       list.add(CartItem(
-          id: int.parse(key),
-          name: value["name"],
-          url: value["url"],
-          price: value["price"],
-          total: value["total"]));
+        id: int.parse(key),
+        name: value["name"],
+        url: value["url"],
+        price: value["price"],
+        total: value["total"],
+        idSeller: value["idSeller"],
+        sellerName: value["sellerName"],
+        stock: value["stock"],
+      ));
     });
     return list;
   }
@@ -134,11 +138,15 @@ class UserService {
     map.forEach((key, value) {
       print("$key $value");
       list.add(Item(
-          id: int.parse(key),
-          name: value['name'],
-          price: value['price'],
-          discount: value['discount'],
-          url: value["url"]));
+        id: int.parse(key),
+        name: value['name'],
+        price: value['price'],
+        discount: value['discount'],
+        url: value["url"],
+        idSeller: value["idSeller"],
+        sellerName: value["sellerName"],
+        stock: value["stock"],
+      ));
     });
     return list;
   }
@@ -148,6 +156,8 @@ class UserService {
       required String name,
       required String url,
       required double price,
+      required String idSeller,
+      required String sellerName,
       required double discount}) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -156,12 +166,15 @@ class UserService {
         // print("currentwishlist $currentWishlist");
         var currentWishlist = await getCurrentWishlist();
         final updatedWishlist = await _addItemToExistingList(
-            id: id,
-            name: name,
-            url: url,
-            price: price,
-            discount: discount,
-            list: currentWishlist);
+          id: id,
+          name: name,
+          url: url,
+          price: price,
+          discount: discount,
+          idSeller: idSeller,
+          sellerName: sellerName,
+          list: currentWishlist,
+        );
 
         print("AddWishList service: wishlist after updated $updatedWishlist");
         if (updatedWishlist != null) {
@@ -460,6 +473,8 @@ class UserService {
     required String url,
     required double price,
     required double discount,
+    required String idSeller,
+    required String sellerName,
     required Map list,
   }) async {
     if (list[id] == null) {
@@ -467,7 +482,9 @@ class UserService {
         "name": name,
         "url": url,
         "price": price,
-        "discount": discount
+        "discount": discount,
+        "idSeller": idSeller,
+        "sellerName": sellerName,
       };
       return list;
     } else {
@@ -604,5 +621,24 @@ class UserService {
     );
     await addToChatChannel(channelId, message);
     return message;
+  }
+
+  Future<bool> isSeller() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool isSeller = false;
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        isSeller = value.data()!["isSeller"] ?? false;
+        print("wishlist $isSeller");
+      });
+      return isSeller;
+    } else {
+      print("error");
+      return false;
+    }
   }
 }
