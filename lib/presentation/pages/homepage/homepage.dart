@@ -72,6 +72,7 @@ class _HomepageState extends State<Homepage> {
                           idSeller: state.listsItem[index].idSeller,
                           sellerName: state.listsItem[index].sellerName,
                           isSelected: state.listsItem[index].isSelected,
+                          stock: state.listsItem[index].stock ?? 0,
                         );
                       },
                     ),

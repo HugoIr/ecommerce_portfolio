@@ -148,7 +148,7 @@ class Profile extends StatelessWidget {
   BlocBuilder<UserBloc, UserState> btnTokoSaya() {
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        if (state is UserLoaded && state.isSeller) {
+        if (state is UserLoaded && state.userInfo!.isSeller) {
           return InkWell(
             borderRadius: BorderRadius.circular(10.r),
             onTap: () {

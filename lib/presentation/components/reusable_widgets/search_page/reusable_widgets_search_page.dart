@@ -48,10 +48,6 @@ Widget gridItems(List<Item> list) {
             mainAxisSpacing: 20),
         itemCount: list.length,
         itemBuilder: (buildContext, index) {
-          // return cardItem(
-          //   width: 170,
-          //   xPadding: 14,
-          // );
           return CardItem(
             index: index,
             width: 170,
@@ -63,6 +59,7 @@ Widget gridItems(List<Item> list) {
             discount: list[index].discount,
             idSeller: list[index].idSeller,
             sellerName: list[index].sellerName,
+            stock: list[index].stock ?? 0,
           );
         }),
   );

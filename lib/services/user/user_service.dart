@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:funesia_clone/data/model/remote/chat/chat_channel.dart';
 import 'package:funesia_clone/data/model/remote/chat/chat_message.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/data/model/remote/user.dart';
 
 class UserService {
   FirebaseFirestore firebaseFirestore;
@@ -75,6 +76,7 @@ class UserService {
           .doc(user.uid)
           .get()
           .then((value) {
+        print("VALUE DATA WISH ${value.data()!["wishlist"]}");
         wishlist = _convertMapToItem(value.data()!["wishlist"]);
       });
 
@@ -145,7 +147,6 @@ class UserService {
         url: value["url"],
         idSeller: value["idSeller"],
         sellerName: value["sellerName"],
-        stock: value["stock"],
       ));
     });
     return list;
@@ -227,6 +228,9 @@ class UserService {
     required double price,
     required double discount,
     required int total,
+    required String idSeller,
+    required String sellerName,
+    required int stock,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -242,6 +246,9 @@ class UserService {
           discount: discount,
           list: currentCart,
           total: total,
+          idSeller: idSeller,
+          sellerName: sellerName,
+          stock: stock,
         );
 
         print("updatedCart service: updatedCart after updated $updatedCart");
@@ -367,6 +374,9 @@ class UserService {
     required double price,
     required double discount,
     required int total,
+    required String idSeller,
+    required String sellerName,
+    required int stock,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -381,6 +391,9 @@ class UserService {
           discount: discount,
           list: currentCart,
           total: total,
+          idSeller: idSeller,
+          sellerName: sellerName,
+          stock: stock,
         );
 
         print("updatedCart service: updatedCart after updated $updatedCart");
@@ -435,6 +448,9 @@ class UserService {
     required double discount,
     required Map list,
     required int total,
+    required String idSeller,
+    required String sellerName,
+    required int stock,
   }) async {
     print("DESIRED TOTAL $total");
     if (list[id.toString()] == null) {
@@ -444,6 +460,9 @@ class UserService {
         "price": price,
         "discount": discount,
         "total": total,
+        "idSeller": idSeller,
+        "sellerName": sellerName,
+        "stock": stock,
       };
       return list;
     } else {
@@ -621,6 +640,31 @@ class UserService {
     );
     await addToChatChannel(channelId, message);
     return message;
+  }
+
+  Future<dynamic> getCurrentUserInfo() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      late UserInformation userInfo;
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .get()
+          .then((value) {
+        // userInfo["isSeller"] = value.data()!["isSeller"] ?? false;
+        // userInfo["uid"] = value.data()!["uid"];
+        // userInfo["email"] = value.data()!["email"];
+        userInfo = UserInformation(
+          email: value.data()!["email"],
+          uid: value.data()!["uid"],
+          isSeller: value.data()!["isSeller"] ?? false,
+        );
+      });
+      return userInfo;
+    } else {
+      print("error");
+      return null;
+    }
   }
 
   Future<bool> isSeller() async {

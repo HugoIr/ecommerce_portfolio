@@ -7,5 +7,6 @@ class UserInitial extends UserState {}
 
 class UserLoaded extends UserState {
   final bool isSeller;
-  UserLoaded({required this.isSeller});
+  final UserInformation? userInfo;
+  UserLoaded({required this.isSeller, required this.userInfo});
 }

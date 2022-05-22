@@ -30,6 +30,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       price: event.price,
       discount: event.discount,
       total: event.total,
+      idSeller: event.idSeller,
+      sellerName: event.sellerName,
+      stock: event.stock,
     );
   }
 

@@ -25,7 +25,7 @@ class Checkout extends StatelessWidget {
           ),
         ),
         title: Text(
-          "Keranjang",
+          "Cart",
           style: TextStyle(color: Colors.grey[600], fontSize: 18),
         ),
       ),
@@ -55,7 +55,9 @@ class Checkout extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                headerItem(),
+                                headerItem(
+                                    sellerName:
+                                        state.listsItem[index].sellerName),
                                 space(),
                                 mainItem(
                                   name: state.listsItem[index].name,
@@ -84,7 +86,6 @@ class Checkout extends StatelessWidget {
                                       children: [
                                         GestureDetector(
                                           onTap: (() {
-                                            print("cliecked");
                                             context.read<CartBloc>()
                                               ..add(RemoveCartItemEvent(
                                                   id: state.listsItem[index].id,
@@ -194,7 +195,7 @@ class Checkout extends StatelessWidget {
     );
   }
 
-  Row headerItem() {
+  Row headerItem({required String sellerName}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +217,7 @@ class Checkout extends StatelessWidget {
                   width: 8,
                 ),
                 Text(
-                  "Rumah Kaos Bandung",
+                  sellerName,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],

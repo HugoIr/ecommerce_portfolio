@@ -8,7 +8,7 @@ class Item {
   double? discount;
   String idSeller;
   String sellerName;
-  int stock;
+  int? stock;
   int sold;
   bool isSelected;
 
@@ -20,7 +20,7 @@ class Item {
     this.discount,
     this.isSelected = false,
     required this.idSeller,
-    required this.stock,
+    this.stock,
     required this.sellerName,
     this.sold = 0,
   });

@@ -16,6 +16,7 @@ class CardItem extends StatelessWidget {
   final double price;
   final String idSeller;
   final String sellerName;
+  final int stock;
   bool isSelected = false;
   final double? discount;
   double width = 130;
@@ -33,6 +34,7 @@ class CardItem extends StatelessWidget {
     required this.price,
     required this.idSeller,
     required this.sellerName,
+    required this.stock,
     this.isSelected = false,
     this.discount,
     this.width = 130,
@@ -60,6 +62,7 @@ class CardItem extends StatelessWidget {
                         discount: discount,
                         idSeller: idSeller,
                         sellerName: sellerName,
+                        stock: stock,
                       ),
                     )));
       },

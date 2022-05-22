@@ -13,6 +13,9 @@ class AddToCartEvent extends CartEvent {
   final double price;
   final double discount;
   final int total;
+  final String idSeller;
+  final String sellerName;
+  final int stock;
 
   AddToCartEvent({
     required this.id,
@@ -22,6 +25,9 @@ class AddToCartEvent extends CartEvent {
     required this.price,
     required this.discount,
     required this.total,
+    required this.idSeller,
+    required this.sellerName,
+    required this.stock,
   });
 }
 

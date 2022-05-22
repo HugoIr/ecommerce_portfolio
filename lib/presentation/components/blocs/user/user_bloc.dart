@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:funesia_clone/data/model/remote/user.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 import 'package:meta/meta.dart';
 
@@ -14,7 +15,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _onGetUserInformationEvent(
       GetUserInformationEvent event, Emitter<UserState> emit) async {
     bool isSeller = await userService.isSeller();
-    print("Isseller $isSeller");
-    emit(UserLoaded(isSeller: isSeller));
+    var currentUserInfo = await userService.getCurrentUserInfo();
+    print("currentUserInfo bloc $currentUserInfo");
+    if (currentUserInfo != null) {
+      emit(UserLoaded(
+          isSeller: isSeller, userInfo: currentUserInfo as UserInformation));
+    } else {
+      emit(UserLoaded(isSeller: isSeller, userInfo: null));
+    }
   }
 }

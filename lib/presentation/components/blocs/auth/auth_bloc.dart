@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/services/auth/auth_service.dart';
 import 'package:funesia_clone/services/user/user_service.dart';

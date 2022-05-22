@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/cubit/type_message_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/custom_sliver_bar.dart';
@@ -21,6 +22,7 @@ class DetailItemPage extends StatelessWidget {
   final double? discount;
   final String idSeller;
   final String sellerName;
+  final int stock;
   DetailItemPage({
     Key? key,
     required this.index,
@@ -30,6 +32,7 @@ class DetailItemPage extends StatelessWidget {
     required this.price,
     required this.idSeller,
     required this.sellerName,
+    required this.stock,
     this.discount,
   }) : super(key: key);
   TextEditingController searchController = TextEditingController();
@@ -157,11 +160,25 @@ class DetailItemPage extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: bottomNavBar(context)),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state is UserLoaded) {
+                  if (state.userInfo!.uid != idSeller) {
+                    return Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: bottomNavBar(context));
+                  } else {
+                    return SizedBox();
+                  }
+                } else if (state is UserInitial) {
+                  return skeletonBottomNavBar(context);
+                } else {
+                  return SizedBox();
+                }
+              },
+            ),
           ],
         ));
     // body: CustomSliverBar(
@@ -183,6 +200,25 @@ class DetailItemPage extends StatelessWidget {
     //     height: 800,
     //   ),
     // ));
+  }
+
+  Container skeletonBottomNavBar(BuildContext context) {
+    return Container(
+      height: 75,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                offset: Offset(0, 0),
+                blurRadius: 10,
+                spreadRadius: 1,
+                blurStyle: BlurStyle.outer,
+                color: Colors.black12)
+          ],
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      padding: EdgeInsets.symmetric(horizontal: 20),
+    );
   }
 
   Container bottomNavBar(BuildContext context) {
@@ -219,8 +255,7 @@ class DetailItemPage extends StatelessWidget {
                                       userService: UserService(
                                           firebaseFirestore:
                                               FirebaseFirestore.instance))
-                                    ..add(SetupChatEvent(
-                                        idTo: "vRmcsVjtkTfQ4tQxmdPXGYwiIuK2"))),
+                                    ..add(SetupChatEvent(idTo: idSeller))),
                             ],
                             child: ChatRoom(),
                           )));
@@ -251,7 +286,10 @@ class DetailItemPage extends StatelessWidget {
                         url: url,
                         price: price,
                         discount: discount!,
-                        total: int.tryParse(totalItemController.text) ?? 1);
+                        total: int.tryParse(totalItemController.text) ?? 1,
+                        idSeller: idSeller,
+                        sellerName: sellerName,
+                        stock: stock);
 
                 FocusManager.instance.primaryFocus!.unfocus();
               },
