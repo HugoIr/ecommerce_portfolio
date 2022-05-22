@@ -52,7 +52,7 @@ class CardItem extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (builder) => BlocProvider(
-                      create: (context) => ItemCounterCubit(),
+                      create: (context) => ItemCounterCubit(initialCount: 1),
                       child: DetailItemPage(
                         index: index,
                         id: id,

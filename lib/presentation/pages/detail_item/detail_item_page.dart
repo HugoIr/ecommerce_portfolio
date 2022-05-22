@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
-import 'package:funesia_clone/presentation/components/cubits/cubit/type_message_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
-import 'package:funesia_clone/presentation/components/reusable_widgets/custom_sliver_bar.dart';
+import 'package:funesia_clone/presentation/components/cubits/type_message/type_message_cubit.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/search_page/search_app_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

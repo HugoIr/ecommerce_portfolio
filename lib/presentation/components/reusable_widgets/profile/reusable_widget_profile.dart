@@ -138,7 +138,7 @@ SizedBox rowIdentity(context, String name, String? email, String? phoneNumber) {
         Spacer(
           flex: 2,
         ),
-        InkWell(
+        GestureDetector(
           onTap: () => Navigator.push(
               context, MaterialPageRoute(builder: (builder) => SignOut())),
           child: Container(

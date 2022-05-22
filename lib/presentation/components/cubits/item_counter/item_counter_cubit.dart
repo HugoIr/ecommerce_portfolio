@@ -2,7 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
 class ItemCounterCubit extends Cubit<int> {
-  ItemCounterCubit() : super(1);
+  int initialCount;
+  ItemCounterCubit({required this.initialCount}) : super(initialCount);
 
   void increaseCounter() {
     emit(state + 1);
@@ -11,6 +12,8 @@ class ItemCounterCubit extends Cubit<int> {
   void changeCounter(var number) {
     if (number == "") {
       emit(1);
+    } else if (number is int) {
+      emit(number);
     } else {
       emit(int.parse(number));
     }

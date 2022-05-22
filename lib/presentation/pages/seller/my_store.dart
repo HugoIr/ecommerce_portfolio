@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:funesia_clone/common/constant.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/raw_app_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/profile/reusable_widget_profile.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
@@ -14,7 +16,12 @@ class MyStore extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const RawAppBar(),
+      appBar: RawAppBar(
+        title: Text(
+          "My Store",
+          style: appBarStyle,
+        ),
+      ),
       body: SingleChildScrollView(
           child: Container(
         width: double.infinity,
@@ -25,10 +32,6 @@ class MyStore extends StatelessWidget {
             children: [
               SizedBox(
                 height: 10,
-              ),
-              Text(
-                "My Store",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
               ),
               space(),
               rowIdentity(context),

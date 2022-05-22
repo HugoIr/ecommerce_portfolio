@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:funesia_clone/common/constant.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/raw_app_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/seller/product_item.dart';
+import 'package:funesia_clone/presentation/pages/seller/product/add_new_product.dart';
 
 class MyProduct extends StatelessWidget {
   const MyProduct({Key? key}) : super(key: key);
@@ -28,16 +29,22 @@ class MyProduct extends StatelessWidget {
         ]),
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        child: Container(
-          width: double.infinity,
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.blueAccent[700],
-              borderRadius: BorderRadius.circular(5)),
-          child: Text(
-            "Add New Product",
-            style: TextStyle(color: Colors.white),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => AddNewProduct()));
+          },
+          child: Container(
+            width: double.infinity,
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.blueAccent[700],
+                borderRadius: BorderRadius.circular(5)),
+            child: Text(
+              "Add New Product",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
       ),
