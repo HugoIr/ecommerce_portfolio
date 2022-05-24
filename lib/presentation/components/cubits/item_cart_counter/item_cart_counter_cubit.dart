@@ -6,12 +6,12 @@ class ItemCartCounterCubit extends Cubit<int> {
   UserService userService;
   ItemCartCounterCubit({required this.userService}) : super(1);
 
-  void increaseCounter(int id) {
+  void increaseCounter(String id) {
     userService.addCart(id: id);
     emit(state + 1);
   }
 
-  void changeCounter(var number, int id) {
+  void changeCounter(var number, String id) {
     if (number == "") {
       userService.updateCartTotal(id: id, total: 1);
       emit(1);
@@ -21,7 +21,7 @@ class ItemCartCounterCubit extends Cubit<int> {
     }
   }
 
-  void decreaseCounter(int id) {
+  void decreaseCounter(String id) {
     if (state > 1) {
       userService.reduceCart(id: id);
       emit(state - 1);

@@ -9,6 +9,6 @@ class SearchEvent extends SearchResultEvent {
 }
 
 class RefreshSearchEvent extends SearchResultEvent {
-  final int id;
+  final String id;
   RefreshSearchEvent({required this.id});
 }

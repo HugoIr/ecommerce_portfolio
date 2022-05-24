@@ -4,12 +4,12 @@ part of 'for_you_bloc.dart';
 abstract class ForYouEvent {}
 
 class GetForYouEvent extends ForYouEvent {
-  final List<Item> list;
-  GetForYouEvent({required this.list});
+  // final List<Item> list;
+  // GetForYouEvent({required this.list});
 }
 
 class AddToWishlistEvent extends ForYouEvent {
-  final int id;
+  final String id;
   final String name;
   final String url;
   final double price;
@@ -28,7 +28,7 @@ class AddToWishlistEvent extends ForYouEvent {
 }
 
 class RemoveToWishlistEvent extends ForYouEvent {
-  final int id;
+  final String id;
 
   RemoveToWishlistEvent({required this.id});
 }

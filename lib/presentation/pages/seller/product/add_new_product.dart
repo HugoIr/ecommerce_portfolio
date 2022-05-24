@@ -1,15 +1,23 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/constant.dart';
+import 'package:funesia_clone/common/utils/commonUrl.dart';
+import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/presentation/components/blocs/product/product_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/file_path/file_path_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/type_message/type_message_cubit.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/raw_app_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
+import 'package:funesia_clone/services/product/product_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 
 class AddNewProduct extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -23,12 +31,20 @@ class AddNewProduct extends StatelessWidget {
 
   final int maxNameLength = 255;
   final int maxDescriptionLength = 3000;
+  final uuid = Uuid();
   AddNewProduct({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FilePathCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FilePathCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ProductBloc(productService: ProductService()),
+        ),
+      ],
       child: Scaffold(
         appBar: RawAppBar(
           title: Text("Add Product", style: appBarStyle),
@@ -72,19 +88,75 @@ class AddNewProduct extends StatelessWidget {
                   width: 10,
                 ),
                 Expanded(
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.blueAccent[700],
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Text(
-                        "Publish",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                  child: BlocBuilder<UserBloc, UserState>(
+                    builder: (context, state) {
+                      if (state is UserLoaded && state.userInfo!.isSeller) {
+                        return InkWell(
+                          onTap: () async {
+                            if (nameController.text.isNotEmpty &&
+                                priceController.text.isNotEmpty &&
+                                stockController.text.isNotEmpty &&
+                                descriptionController.text.isNotEmpty) {
+                              Item item = Item(
+                                id: uuid.v4(),
+                                idSeller: state.userInfo!.uid,
+                                sellerName: state.userInfo!.email,
+                                name: nameController.text,
+                                price: double.parse(priceController.text),
+                                discount: (discountController.text.isNotEmpty)
+                                    ? double.parse(discountController.text)
+                                    : null,
+                                stock: int.parse(stockController.text),
+                                url: "$dummyPic/200",
+                              );
+                              BlocProvider.of<ProductBloc>(context)
+                                ..add(CreateProductEvent(item: item));
+                            }
+                            // await FirebaseAnalytics.instance
+                            //     .logBeginCheckout(
+                            //         value: 10.0,
+                            //         currency: 'USD',
+                            //         items: [
+                            //           AnalyticsEventItem(
+                            //             itemName: 'SEPATUU',
+                            //             itemId: 'xjw7123123123ndnw',
+                            //             price: 102312.0,
+                            //           ),
+                            //         ],
+                            //         coupon: '10PERCENTOFF')
+                            //     .catchError((error) {
+                            //   print("ERRROR //");
+                            // }).whenComplete(() => print("COMPLETE"));
+
+                            // await FirebaseAnalytics.instance
+                            //     .logSelectContent(
+                            //       contentType: "imagedsadasdas",
+                            //       itemId: "itemId",
+                            //     )
+                            //     .whenComplete(() => print("COMPLETE content"));
+                            // print("${await FirebaseAnalytics.instance}");
+                            // await FirebaseAnalytics.instance.logEvent(
+                            //     name: "LOG_hugo",
+                            //     parameters: {
+                            //       "tes": 1
+                            //     }).whenComplete(() => print("Log events"));
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.blueAccent[700],
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Text(
+                              "Publish",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                 ),
               ],
@@ -112,10 +184,14 @@ class AddNewProduct extends StatelessWidget {
                                     final ImagePicker _picker = ImagePicker();
                                     final XFile? image = await _picker
                                         .pickImage(source: ImageSource.gallery);
-                                    print("IMAGE ${image!.path}");
-                                    context
-                                        .read<FilePathCubit>()
-                                        .changeFilePath(image.path);
+
+                                    if (image != null) {
+                                      print("IMAGE ${image.path}");
+
+                                      context
+                                          .read<FilePathCubit>()
+                                          .changeFilePath(image.path);
+                                    }
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(20.sp),
@@ -173,6 +249,7 @@ class AddNewProduct extends StatelessWidget {
                   rowInputNumber(
                     asset: "assets/seller/price_tag.png",
                     title: "Price",
+                    controller: priceController,
                     isForPrice: true,
                   ),
                   Divider(
@@ -182,6 +259,7 @@ class AddNewProduct extends StatelessWidget {
                   rowInputNumber(
                     asset: "assets/seller/layers.png",
                     title: "Stock",
+                    controller: stockController,
                   ),
                   Divider(
                     height: 0.05,
@@ -190,6 +268,7 @@ class AddNewProduct extends StatelessWidget {
                   rowInputNumber(
                     asset: "assets/seller/discount_tag.png",
                     title: "Discount",
+                    controller: discountController,
                   ),
                 ],
               ),
@@ -203,6 +282,7 @@ class AddNewProduct extends StatelessWidget {
   Container rowInputNumber({
     required String asset,
     required String title,
+    required TextEditingController controller,
     bool isForPrice = false,
     String hintText = "Set",
   }) {
@@ -236,6 +316,7 @@ class AddNewProduct extends StatelessWidget {
             child: TextFormField(
               style: mediumTextStyle,
               textDirection: TextDirection.rtl,
+              controller: controller,
               maxLength: 20,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
@@ -309,6 +390,11 @@ class CustomTextField extends StatelessWidget {
             height: 16.sp,
           ),
           TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Please $hintText";
+              }
+            },
             onChanged: (val) {
               itemCounterCubit.changeCounter(val.length);
               typeMessageCubit.onType(val);

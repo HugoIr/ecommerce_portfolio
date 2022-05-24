@@ -1,11 +1,11 @@
 import 'package:funesia_clone/common/utils/commonUrl.dart';
 
 class Item {
-  int id;
+  String id;
   String name;
   String url;
-  double price;
-  double? discount;
+  dynamic price;
+  dynamic? discount;
   String idSeller;
   String sellerName;
   int? stock;
@@ -24,12 +24,31 @@ class Item {
     required this.sellerName,
     this.sold = 0,
   });
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {
+      "id": id,
+      "name": name,
+      "url": url,
+      "price": price,
+      "idSeller": idSeller,
+      "sellerName": sellerName,
+      "sold": sold,
+    };
+    if (stock != null) {
+      map["stock"] = stock;
+    }
+    if (discount != null) {
+      map["discount"] = discount;
+    }
+    return map;
+  }
 }
 
 class CartItem extends Item {
   int total;
   CartItem({
-    required int id,
+    required String id,
     required String name,
     required String url,
     required double price,
@@ -50,7 +69,7 @@ class CartItem extends Item {
 
 List<Item> dummyItemsList = [
   Item(
-    id: 1,
+    id: "1",
     name: "12 Teknologi Lele Tingkatkan Laba",
     price: 72000,
     url: "${dummyPic}450",
@@ -60,7 +79,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 2,
+    id: "2",
     name: "Lele Tingkatkan Laba",
     price: 72000,
     url: "${dummyPic}450",
@@ -70,7 +89,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 3,
+    id: "3",
     name: "Teknologi Laba",
     price: 72000,
     url: "${dummyPic}450",
@@ -80,7 +99,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 4,
+    id: "4",
     name: "Lele Labadi",
     price: 72000,
     url: "${dummyPic}450",
@@ -90,7 +109,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 5,
+    id: "5",
     name: "Cat Lovers",
     price: 72000,
     url: "${dummyPic}450",
@@ -100,7 +119,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 6,
+    id: "6",
     name: "Atomic Habits",
     price: 72000,
     url: "${dummyPic}450",
@@ -110,7 +129,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 7,
+    id: "7",
     name: "Atomic",
     price: 72000,
     url: "${dummyPic}450",
@@ -120,7 +139,7 @@ List<Item> dummyItemsList = [
     stock: 10,
   ),
   Item(
-    id: 8,
+    id: "8",
     name: "5 AM Club",
     price: 72000,
     url: "${dummyPic}450",

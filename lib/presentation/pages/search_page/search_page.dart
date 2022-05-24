@@ -63,8 +63,7 @@ class SearchPage extends StatelessWidget {
                   );
                 } else {
                   print("masuk else search");
-                  context.read<ForYouBloc>()
-                    ..add(GetForYouEvent(list: dummyItemsList));
+                  context.read<ForYouBloc>()..add(GetForYouEvent());
                   return BlocBuilder<ForYouBloc, ForYouState>(
                     builder: (context, forYouState) {
                       if (forYouState is LoadedForYouState) {

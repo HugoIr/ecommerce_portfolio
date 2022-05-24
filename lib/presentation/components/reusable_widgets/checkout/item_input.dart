@@ -4,7 +4,7 @@ import 'package:funesia_clone/presentation/components/cubits/item_cart_counter/i
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
 
 class ItemInput extends StatelessWidget {
-  final int id;
+  final String id;
   final TextEditingController totalItemController;
   const ItemInput(
       {Key? key, required this.id, required this.totalItemController})

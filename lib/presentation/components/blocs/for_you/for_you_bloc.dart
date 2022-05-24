@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/services/product/product_service.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 import 'package:meta/meta.dart';
 
@@ -11,8 +12,9 @@ part 'for_you_state.dart';
 
 class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
   UserService userService;
-
-  ForYouBloc({required this.userService}) : super(ForYouInitial()) {
+  ProductService productService;
+  ForYouBloc({required this.userService, required this.productService})
+      : super(ForYouInitial()) {
     on<GetForYouEvent>(_onGetForYou);
     on<AddToWishlistEvent>(_onAddToWishlist);
     on<RemoveToWishlistEvent>(_onRemoveToWishlist);
@@ -42,7 +44,9 @@ class ForYouBloc extends Bloc<ForYouEvent, ForYouState> {
     var listsId = await userService.getListsId();
     print("listId $listsId");
 
-    List<Item> newList = event.list.map((item) {
+    List<Item> listProduct = await productService.getListProduct();
+    List<Item> newList = listProduct.map((item) {
+      print("ITEM get for you ${item.name}");
       if (listsId.contains(item.id.toString())) {
         // print("selected item id ${item.id}");
         item.isSelected = true;

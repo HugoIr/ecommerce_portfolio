@@ -6,7 +6,7 @@ abstract class CartEvent {}
 class GetCartEvent extends CartEvent {}
 
 class AddToCartEvent extends CartEvent {
-  final int id;
+  final String id;
   final int index;
   final String name;
   final String url;
@@ -32,7 +32,7 @@ class AddToCartEvent extends CartEvent {
 }
 
 class RemoveCartItemEvent extends CartEvent {
-  final int id;
+  final String id;
   final int index;
   RemoveCartItemEvent({
     required this.id,

@@ -46,6 +46,8 @@ dependencies:
   firebase_messaging: ^11.3.0
   flutter_screenutil: ^5.5.2
   image_picker: ^0.8.5+3
+  firebase_analytics: ^9.1.8
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:

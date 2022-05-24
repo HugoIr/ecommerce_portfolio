@@ -10,7 +10,7 @@ import 'package:funesia_clone/presentation/pages/detail_item/detail_item_page.da
 
 class CardItem extends StatelessWidget {
   final int index;
-  final int id;
+  final String id;
   final String name;
   final String url;
   final double price;
@@ -181,7 +181,7 @@ class CardItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "Rp72.000",
+                        "Rp$price",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       ),

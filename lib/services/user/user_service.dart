@@ -59,7 +59,7 @@ class UserService {
           .get()
           .then((value) {
         wishlist = value.data()!["wishlist"];
-        print("wishlist $wishlist");
+        // print("wishlist $wishlist");
       });
       return wishlist;
     } else {
@@ -122,7 +122,7 @@ class UserService {
     map.forEach((key, value) {
       print("$key $value");
       list.add(CartItem(
-        id: int.parse(key),
+        id: key,
         name: value["name"],
         url: value["url"],
         price: value["price"],
@@ -140,7 +140,7 @@ class UserService {
     map.forEach((key, value) {
       print("$key $value");
       list.add(Item(
-        id: int.parse(key),
+        id: key,
         name: value['name'],
         price: value['price'],
         discount: value['discount'],
@@ -153,7 +153,7 @@ class UserService {
   }
 
   dynamic addWishlist(
-      {required int id,
+      {required String id,
       required String name,
       required String url,
       required double price,
@@ -194,7 +194,7 @@ class UserService {
   }
 
   dynamic removeWishlist({
-    required int id,
+    required String id,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -222,7 +222,7 @@ class UserService {
   }
 
   dynamic addToCart({
-    required int id,
+    required String id,
     required String name,
     required String url,
     required double price,
@@ -268,7 +268,7 @@ class UserService {
   }
 
   dynamic addCart({
-    required int id,
+    required String id,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -292,7 +292,7 @@ class UserService {
   }
 
   dynamic updateCartTotal({
-    required int id,
+    required String id,
     required int total,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
@@ -321,7 +321,7 @@ class UserService {
   }
 
   dynamic removeCartItem({
-    required int id,
+    required String id,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -344,7 +344,7 @@ class UserService {
   }
 
   dynamic reduceCart({
-    required int id,
+    required String id,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
     try {
@@ -368,7 +368,7 @@ class UserService {
   }
 
   dynamic updateCart({
-    required int id,
+    required String id,
     required String name,
     required String url,
     required double price,
@@ -413,7 +413,7 @@ class UserService {
   }
 
   dynamic removeFromCart({
-    required int id,
+    required String id,
     required int total,
   }) async {
     CollectionReference users = firebaseFirestore.collection("users");
@@ -441,7 +441,7 @@ class UserService {
   }
 
   dynamic _addItemToExistingCart({
-    required int id,
+    required String id,
     required String name,
     required String url,
     required double price,
@@ -474,7 +474,7 @@ class UserService {
   }
 
   dynamic _removeItemFromExistingCart({
-    required int id,
+    required String id,
     required Map list,
     required int total,
   }) async {
@@ -487,7 +487,7 @@ class UserService {
   }
 
   dynamic _addItemToExistingList({
-    required int id,
+    required String id,
     required String name,
     required String url,
     required double price,
@@ -513,7 +513,7 @@ class UserService {
   }
 
   dynamic _removeItemFromExistingList({
-    required int id,
+    required String id,
     required Map list,
   }) async {
     print("id yg ingin diremove: $id");

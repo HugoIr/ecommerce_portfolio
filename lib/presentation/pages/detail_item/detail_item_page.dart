@@ -13,7 +13,7 @@ import 'package:funesia_clone/services/user/user_service.dart';
 
 class DetailItemPage extends StatelessWidget {
   final int index;
-  final int id;
+  final String id;
   final String name;
   final String url;
   final double price;
@@ -485,6 +485,7 @@ class DetailItemPage extends StatelessWidget {
         BlocBuilder<ForYouBloc, ForYouState>(
           builder: (context, state) {
             if (state is LoadedForYouState) {
+              print("state.listsItem ${state.listsItem}");
               bool isFavourite = state.listsItem
                   .firstWhere((item) => item.id == id)
                   .isSelected;

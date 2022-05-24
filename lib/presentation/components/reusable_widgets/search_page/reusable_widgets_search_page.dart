@@ -33,34 +33,34 @@ List<Map<String, dynamic>> listFilterMenu = [
   },
 ];
 
-Widget gridItems(List<Item> list) {
-  return Container(
-    height: 1000,
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    width: double.infinity,
-    child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisExtent: 270,
-            crossAxisCount: 2,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20),
-        itemCount: list.length,
-        itemBuilder: (buildContext, index) {
-          return CardItem(
-            index: index,
-            width: 170,
-            xPadding: 14,
-            id: list[index].id,
-            name: list[index].name,
-            url: list[index].url,
-            price: list[index].price,
-            discount: list[index].discount,
-            idSeller: list[index].idSeller,
-            sellerName: list[index].sellerName,
-            stock: list[index].stock ?? 0,
-          );
-        }),
-  );
-}
+// Widget gridItems(List<Item> list) {
+//   return Container(
+//     height: 1000,
+//     padding: EdgeInsets.symmetric(horizontal: 20),
+//     width: double.infinity,
+//     child: GridView.builder(
+//         physics: const NeverScrollableScrollPhysics(),
+//         shrinkWrap: true,
+//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//             mainAxisExtent: 270,
+//             crossAxisCount: 2,
+//             crossAxisSpacing: 20,
+//             mainAxisSpacing: 20),
+//         itemCount: list.length,
+//         itemBuilder: (buildContext, index) {
+//           return CardItem(
+//             index: index,
+//             width: 170,
+//             xPadding: 14,
+//             id: list[index].id ?? 0 ,
+//             name: list[index].name,
+//             url: list[index].url,
+//             price: list[index].price,
+//             discount: list[index].discount,
+//             idSeller: list[index].idSeller,
+//             sellerName: list[index].sellerName,
+//             stock: list[index].stock ?? 0,
+//           );
+//         }),
+//   );
+// }

@@ -15,6 +15,7 @@ import 'package:funesia_clone/presentation/pages/auth/sign_in/sign_in.dart';
 import 'package:funesia_clone/presentation/pages/main_page/main_page.dart';
 import 'package:funesia_clone/presentation/pages/sign_up/sign_up.dart';
 import 'package:funesia_clone/services/auth/auth_service.dart';
+import 'package:funesia_clone/services/product/product_service.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 
 void main() async {
@@ -52,9 +53,10 @@ class Main extends StatelessWidget {
           ),
           BlocProvider(
               create: (create) => ForYouBloc(
+                  productService: ProductService(),
                   userService:
                       UserService(firebaseFirestore: firebaseFirestore))
-                ..add(GetForYouEvent(list: dummyItemsList))),
+                ..add(GetForYouEvent())),
         ],
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
