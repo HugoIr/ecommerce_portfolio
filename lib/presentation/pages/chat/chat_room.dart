@@ -5,8 +5,9 @@ import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart'
 import 'package:funesia_clone/presentation/components/cubits/type_message/type_message_cubit.dart';
 
 class ChatRoom extends StatelessWidget {
+  final String sellerName;
   final TextEditingController chatController = TextEditingController();
-  ChatRoom({Key? key}) : super(key: key);
+  ChatRoom({Key? key, required this.sellerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class ChatRoom extends StatelessWidget {
               width: 12,
             ),
             Text(
-              "hugsToko",
+              sellerName,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

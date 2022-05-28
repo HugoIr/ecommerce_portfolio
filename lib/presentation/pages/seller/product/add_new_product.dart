@@ -31,7 +31,8 @@ class AddNewProduct extends StatelessWidget {
 
   final int maxNameLength = 255;
   final int maxDescriptionLength = 3000;
-  final uuid = Uuid();
+  final uuid = const Uuid();
+  XFile? fileImage;
   AddNewProduct({Key? key}) : super(key: key);
 
   @override
@@ -92,25 +93,23 @@ class AddNewProduct extends StatelessWidget {
                     builder: (context, state) {
                       if (state is UserLoaded && state.userInfo!.isSeller) {
                         return InkWell(
-                          onTap: () async {
+                          onTap: () {
                             if (nameController.text.isNotEmpty &&
                                 priceController.text.isNotEmpty &&
                                 stockController.text.isNotEmpty &&
-                                descriptionController.text.isNotEmpty) {
-                              Item item = Item(
-                                id: uuid.v4(),
-                                idSeller: state.userInfo!.uid,
-                                sellerName: state.userInfo!.email,
-                                name: nameController.text,
-                                price: double.parse(priceController.text),
-                                discount: (discountController.text.isNotEmpty)
-                                    ? double.parse(discountController.text)
-                                    : null,
-                                stock: int.parse(stockController.text),
-                                url: "$dummyPic/200",
-                              );
+                                descriptionController.text.isNotEmpty &&
+                                fileImage != null) {
                               BlocProvider.of<ProductBloc>(context)
-                                ..add(CreateProductEvent(item: item));
+                                ..add(CreateProductEvent(
+                                  id: uuid.v4(),
+                                  idSeller: state.userInfo!.uid,
+                                  sellerName: state.userInfo!.email,
+                                  name: nameController.text,
+                                  price: priceController.text,
+                                  discount: discountController.text,
+                                  stock: stockController.text,
+                                  fileImage: fileImage!,
+                                ));
                             }
                             // await FirebaseAnalytics.instance
                             //     .logBeginCheckout(
@@ -135,11 +134,12 @@ class AddNewProduct extends StatelessWidget {
                             //     )
                             //     .whenComplete(() => print("COMPLETE content"));
                             // print("${await FirebaseAnalytics.instance}");
-                            // await FirebaseAnalytics.instance.logEvent(
+
+                            // FirebaseAnalytics.instance.logEvent(
                             //     name: "LOG_hugo",
-                            //     parameters: {
-                            //       "tes": 1
-                            //     }).whenComplete(() => print("Log events"));
+                            //     parameters: {"tes": 1}).catchError((error) {
+                            //   print("onERROR $error");
+                            // }).whenComplete(() => print("Log events"));
                           },
                           child: Container(
                             alignment: Alignment.center,
@@ -184,10 +184,9 @@ class AddNewProduct extends StatelessWidget {
                                     final ImagePicker _picker = ImagePicker();
                                     final XFile? image = await _picker
                                         .pickImage(source: ImageSource.gallery);
-
                                     if (image != null) {
                                       print("IMAGE ${image.path}");
-
+                                      fileImage = image;
                                       context
                                           .read<FilePathCubit>()
                                           .changeFilePath(image.path);

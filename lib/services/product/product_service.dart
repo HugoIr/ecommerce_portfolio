@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 
 class ProductService {
   final productCollection = FirebaseFirestore.instance.collection("product");
@@ -61,23 +67,18 @@ class ProductService {
     await productCollection.doc(user!.uid).set({
       "product": existingProduct,
     });
+  }
 
-    // if (doc.data()!["chatConnection"] == null) {
-    //     Map<String, dynamic> newChatConnection = {
-    //       idTo: {"channelId": channelId},
-    //     };
-    //     userCollection.doc(idFrom).set(newChatConnection);
-    //     print("if no chatconn new conn $newChatConnection");
+  Future uploadImageToFirebase(XFile imageFile, String idProduct) async {
+    // final filename = basename(path);
+    UploadTask uploadTask;
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('product-image/${user!.uid}/$idProduct');
 
-    //     return newChatConnection;
-    //   } else {
-    //     print("else append");
-    //     // append
-    //     final updatedMap = doc.data();
-    //     updatedMap!["chatConnection"][idTo] = {"channelId": channelId};
-    //     print("Updatedd map $updatedMap");
-    //     userCollection.doc(idFrom).update(updatedMap);
-    //     return updatedMap;
-    //   }
+    print("REF$ref");
+    uploadTask = ref.putFile(File(imageFile.path));
+    print("uploadTask${uploadTask.storage}");
+    return Future.value(uploadTask);
   }
 }

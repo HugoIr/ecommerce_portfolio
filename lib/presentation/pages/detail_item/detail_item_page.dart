@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/presentation/components/blocs/chat/chat_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
@@ -255,7 +256,9 @@ class DetailItemPage extends StatelessWidget {
                                               FirebaseFirestore.instance))
                                     ..add(SetupChatEvent(idTo: idSeller))),
                             ],
-                            child: ChatRoom(),
+                            child: ChatRoom(
+                              sellerName: sellerName,
+                            ),
                           )));
             },
             child: Container(
@@ -384,6 +387,8 @@ class DetailItemPage extends StatelessWidget {
         Image.network(
           url,
           width: double.infinity,
+          height: 400.w,
+          fit: BoxFit.cover,
         ),
         Positioned(
           bottom: 0,

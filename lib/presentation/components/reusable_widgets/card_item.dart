@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/constant.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
@@ -78,13 +79,17 @@ class CardItem extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10)),
-                child: Image.network(
-                  url,
-                  width: double.infinity,
+              Container(
+                width: double.infinity,
+                height: 153.sp,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  child: Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Container(
