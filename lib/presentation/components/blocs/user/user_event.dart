@@ -4,3 +4,5 @@ part of 'user_bloc.dart';
 abstract class UserEvent {}
 
 class GetUserInformationEvent extends UserEvent {}
+
+class BecomeSellerEvent extends UserEvent {}

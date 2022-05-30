@@ -24,7 +24,7 @@ class AppBarHome extends StatelessWidget with PreferredSizeWidget {
         child: Column(
           children: [
             Container(
-              height: 80.w,
+              height: 76.w,
               color: Colors.blueAccent[700],
               child: rowAppBar(context),
             ),

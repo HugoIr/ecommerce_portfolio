@@ -42,7 +42,9 @@ Widget btnBukaStore() {
           children: [
             space(),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                BlocProvider.of<UserBloc>(context)..add(BecomeSellerEvent());
+              },
               child: Container(
                 width: double.infinity,
                 height: 56,
@@ -63,7 +65,7 @@ Widget btnBukaStore() {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        "Buka Store Sekarang!",
+                        "Start Become a Seller!",
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,

@@ -7,7 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/constant.dart';
 import 'package:funesia_clone/common/utils/commonUrl.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/product/product_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/seller/my_product/my_product_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/cubits/file_path/file_path_cubit.dart';
 import 'package:funesia_clone/presentation/components/cubits/item_counter/item_counter_cubit.dart';
@@ -33,7 +35,8 @@ class AddNewProduct extends StatelessWidget {
   final int maxDescriptionLength = 3000;
   final uuid = const Uuid();
   XFile? fileImage;
-  AddNewProduct({Key? key}) : super(key: key);
+  var myProductContext;
+  AddNewProduct({Key? key, this.myProductContext}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,10 @@ class AddNewProduct extends StatelessWidget {
           create: (context) => FilePathCubit(),
         ),
         BlocProvider(
-          create: (context) => ProductBloc(productService: ProductService()),
+          create: (context) => ProductBloc(
+              myProductBloc: BlocProvider.of<MyProductBloc>(myProductContext),
+              productService: ProductService(),
+              forYouBloc: BlocProvider.of<ForYouBloc>(context)),
         ),
       ],
       child: Scaffold(
@@ -110,48 +116,22 @@ class AddNewProduct extends StatelessWidget {
                                   stock: stockController.text,
                                   fileImage: fileImage!,
                                 ));
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  customSnackBar(
+                                      "Successfully added new product!"));
                             }
-                            // await FirebaseAnalytics.instance
-                            //     .logBeginCheckout(
-                            //         value: 10.0,
-                            //         currency: 'USD',
-                            //         items: [
-                            //           AnalyticsEventItem(
-                            //             itemName: 'SEPATUU',
-                            //             itemId: 'xjw7123123123ndnw',
-                            //             price: 102312.0,
-                            //           ),
-                            //         ],
-                            //         coupon: '10PERCENTOFF')
-                            //     .catchError((error) {
-                            //   print("ERRROR //");
-                            // }).whenComplete(() => print("COMPLETE"));
-
-                            // await FirebaseAnalytics.instance
-                            //     .logSelectContent(
-                            //       contentType: "imagedsadasdas",
-                            //       itemId: "itemId",
-                            //     )
-                            //     .whenComplete(() => print("COMPLETE content"));
-                            // print("${await FirebaseAnalytics.instance}");
-
-                            // FirebaseAnalytics.instance.logEvent(
-                            //     name: "LOG_hugo",
-                            //     parameters: {"tes": 1}).catchError((error) {
-                            //   print("onERROR $error");
-                            // }).whenComplete(() => print("Log events"));
                           },
                           child: Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                                color: Colors.blueAccent[700],
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Text(
-                              "Publish",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.blueAccent[700],
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                "Publish",
+                                style: TextStyle(color: Colors.white),
+                              )),
                         );
                       } else {
                         return const SizedBox();

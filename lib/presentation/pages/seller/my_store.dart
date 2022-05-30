@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/constant.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/seller/my_product/my_product_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/raw_app_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/profile/reusable_widget_profile.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/reusable_widget_main_page.dart';
@@ -101,8 +105,19 @@ class MyStore extends StatelessWidget {
               SizedBox(height: 20),
               InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => MyProduct()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => BlocProvider(
+                                create: (context) => MyProductBloc(
+                                  forYouBloc:
+                                      BlocProvider.of<ForYouBloc>(context),
+                                  userBloc: BlocProvider.of<UserBloc>(context),
+                                )..add(
+                                    GetMyProductEvent(),
+                                  ),
+                                child: MyProduct(),
+                              )));
                 },
                 child: Container(
                   width: double.infinity,

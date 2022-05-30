@@ -5,9 +5,18 @@ import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/r
 
 class ProductItem extends StatelessWidget {
   final String text;
-  final String price;
-  const ProductItem({Key? key, required this.text, required this.price})
-      : super(key: key);
+  final double price;
+  final String url;
+  final int stock;
+  final int sold;
+  const ProductItem({
+    Key? key,
+    required this.text,
+    required this.price,
+    required this.url,
+    required this.stock,
+    required this.sold,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,7 @@ class ProductItem extends StatelessWidget {
                 width: 70,
                 height: 70,
                 child: Image.network(
-                  dummyPic + "200",
+                  url,
                   cacheHeight: 70,
                   cacheWidth: 70,
                 )),
@@ -34,7 +43,7 @@ class ProductItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  text + "dasdasdsadsdwkewkewkekwekwkekwekwkewk sdwdwdwdw",
+                  text,
                 ),
                 SizedBox(
                   height: 8,
@@ -54,14 +63,16 @@ class ProductItem extends StatelessWidget {
           Row(
             children: [
               subInfo(
-                  asset: "assets/seller/layers.png", name: "Stock", total: 20),
+                  asset: "assets/seller/layers.png",
+                  name: "Stock",
+                  total: stock),
               Spacer(
                 flex: 1,
               ),
               subInfo(
                   asset: "assets/seller/sold_out.png",
                   name: "Sold",
-                  total: 100),
+                  total: sold),
               Spacer(
                 flex: 1,
               ),

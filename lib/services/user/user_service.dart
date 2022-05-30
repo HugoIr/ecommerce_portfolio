@@ -34,6 +34,7 @@ class UserService {
           "wishlist": {},
           "cart": {},
           "chatConnection": {},
+          "isSeller": false,
         })
         .then((_) => print("success add"))
         .catchError((e) => print("error $e"));
@@ -683,6 +684,18 @@ class UserService {
     } else {
       print("error");
       return false;
+    }
+  }
+
+  void becomeSeller() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await firebaseFirestore
+          .collection("users")
+          .doc(user.uid)
+          .update({"isSeller": true});
+    } else {
+      print("log in first");
     }
   }
 }

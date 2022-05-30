@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/utils/db_helper.dart';
-import 'package:funesia_clone/data/model/remote/item.dart';
 import 'package:funesia_clone/firebase_options.dart';
 import 'package:funesia_clone/presentation/components/blocs/auth/auth_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';

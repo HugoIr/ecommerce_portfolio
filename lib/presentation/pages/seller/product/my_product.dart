@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:funesia_clone/common/constant.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/seller/my_product/my_product_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/user/user_bloc.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/app_bar/raw_app_bar.dart';
 import 'package:funesia_clone/presentation/components/reusable_widgets/seller/product_item.dart';
 import 'package:funesia_clone/presentation/pages/seller/product/add_new_product.dart';
@@ -31,8 +36,12 @@ class MyProduct extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: InkWell(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => AddNewProduct()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (builder) => AddNewProduct(
+                          myProductContext: context,
+                        )));
           },
           child: Container(
             width: double.infinity,
@@ -48,25 +57,45 @@ class MyProduct extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-          child: Container(
+      body: SingleChildScrollView(child: Container(
         // padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ListView.separated(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 4,
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 16,
+        child: BlocBuilder<MyProductBloc, MyProductState>(
+          builder: (context, state) {
+            if (state is MyProductLoaded) {
+              if (state.listsItem.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 20.sp),
+                  child: Center(child: Text("There is no added product")),
+                );
+              }
+              return ListView.separated(
+                  padding: EdgeInsets.symmetric(vertical: 16.sp),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: state.listsItem.length,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 16.sp,
+                    );
+                  },
+                  itemBuilder: (context, index) {
+                    return ProductItem(
+                      text: state.listsItem[index].name,
+                      price: state.listsItem[index].price,
+                      url: state.listsItem[index].url,
+                      stock: state.listsItem[index].stock!,
+                      sold: state.listsItem[index].sold,
+                      // text: state.listsItem[index].name,
+                      // price: state.listsItem[index].price,
+                    );
+                  });
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            },
-            itemBuilder: (context, index) {
-              return ProductItem(
-                text: "text",
-                price: "72000",
-              );
-            }),
+            }
+          },
+        ),
       )),
     );
   }

@@ -12,7 +12,7 @@ import 'package:uuid/uuid.dart';
 class ProductService {
   final productCollection = FirebaseFirestore.instance.collection("product");
   final user = FirebaseAuth.instance.currentUser;
-  final uuid = Uuid();
+  final uuid = const Uuid();
   dynamic getListProduct() async {
     List<Item> list = [];
     QuerySnapshot querySnapshot = await productCollection.get();
@@ -49,7 +49,12 @@ class ProductService {
     var existingProduct;
     await productCollection.doc(idSeller).get().then((value) {
       print("valuedata ${value.data()}");
-      existingProduct = value.data()!["product"];
+
+      if (value.data() != null) {
+        if (value.data()!["product"] != null) {
+          existingProduct = value.data()!["product"];
+        }
+      }
     });
     print("existingProduct $existingProduct");
     return existingProduct;
