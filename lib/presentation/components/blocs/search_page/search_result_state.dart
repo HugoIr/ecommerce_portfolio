@@ -5,6 +5,8 @@ abstract class SearchResultState {}
 
 class SearchResultInitial extends SearchResultState {}
 
+class SearchResultNotFound extends SearchResultState {}
+
 class SearchResultLoading extends SearchResultState {}
 
 class SearchResultLoaded extends SearchResultState {

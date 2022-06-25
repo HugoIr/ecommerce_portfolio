@@ -151,7 +151,8 @@ class AppBarHome extends StatelessWidget with PreferredSizeWidget {
                                     create: (context) => SearchResultBloc(
                                         userService: UserService(
                                             firebaseFirestore:
-                                                FirebaseFirestore.instance))
+                                                FirebaseFirestore.instance),
+                                        context: context)
                                       ..add(SearchEvent(keyword: value)),
                                     child: SearchPage(
                                       controllerText: value,

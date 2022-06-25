@@ -36,9 +36,11 @@ class _HomepageState extends State<Homepage> {
                         MaterialPageRoute(
                             builder: (builder) => BlocProvider(
                                   create: (context) => SearchResultBloc(
-                                      userService: UserService(
-                                          firebaseFirestore:
-                                              FirebaseFirestore.instance)),
+                                    userService: UserService(
+                                        firebaseFirestore:
+                                            FirebaseFirestore.instance),
+                                    context: context,
+                                  ),
                                   child: SearchPage(),
                                 )));
                   }),

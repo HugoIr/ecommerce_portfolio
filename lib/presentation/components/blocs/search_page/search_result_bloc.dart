@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:funesia_clone/data/model/remote/item.dart';
+import 'package:funesia_clone/presentation/components/blocs/for_you/for_you_bloc.dart';
 import 'package:funesia_clone/services/user/user_service.dart';
 import 'package:meta/meta.dart';
 
@@ -10,7 +13,11 @@ part 'search_result_state.dart';
 
 class SearchResultBloc extends Bloc<SearchResultEvent, SearchResultState> {
   UserService userService;
-  SearchResultBloc({required this.userService}) : super(SearchResultInitial()) {
+  BuildContext context;
+  SearchResultBloc({
+    required this.userService,
+    required this.context,
+  }) : super(SearchResultInitial()) {
     on<SearchEvent>(_onSearch);
     on<RefreshSearchEvent>(_onRefreshSearch);
   }
@@ -23,12 +30,19 @@ class SearchResultBloc extends Bloc<SearchResultEvent, SearchResultState> {
     );
     print("_onSearch");
 
-    // just a quick note: object Item yg ada disini itu sama dengan
-    // Object Item yg telah diolah di ForYouBloc
-    List<Item> results = dummyItemsList
-        .where((item) => item.name.toLowerCase().contains(event.keyword))
-        .toList();
-    print(results);
+    final state = BlocProvider.of<ForYouBloc>(context).state;
+    print("State foryoubloc inside searchresult bloc : $state");
+    if (state is LoadedForYouState) {
+      // just a quick note: object Item yg ada disini itu sama dengan
+      // Object Item yg telah diolah di ForYouBloc
+      List<Item> results = state.listsItem
+          .where((item) => item.name.toLowerCase().contains(event.keyword))
+          .toList();
+      print(results);
+      emit(SearchResultLoaded(results: results));
+    } else {
+      emit(SearchResultNotFound());
+    }
 
     // var listsId = await userService.getListsId();
     // results = results.map((item) {
@@ -38,8 +52,6 @@ class SearchResultBloc extends Bloc<SearchResultEvent, SearchResultState> {
     //   }
     //   return item;
     // }).toList();
-
-    emit(SearchResultLoaded(results: results));
   }
 
   FutureOr<void> _onRefreshSearch(
