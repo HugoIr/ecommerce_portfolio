@@ -186,7 +186,7 @@ class CardItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "Rp$price",
+                        "Rp${(price * ((100 - discount!.floor()) / 100).r)}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       ),
@@ -194,17 +194,23 @@ class CardItem extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text("Rp72.000",
-                              style: subTextStyle.copyWith(
-                                  decoration: TextDecoration.lineThrough)),
+                          Flexible(
+                            child: Text("Rp${price.round()}",
+                                style: subTextStyle.copyWith(
+                                    decoration: (discount != null)
+                                        ? TextDecoration.lineThrough
+                                        : null)),
+                          ),
                           SizedBox(
                             width: 4,
                           ),
-                          Text(
-                            "20% Off",
-                            style: TextStyle(
-                                fontSize: 11, color: Colors.greenAccent),
-                          ),
+                          (discount != null)
+                              ? Text(
+                                  "${discount!.floor()}% Off",
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.greenAccent),
+                                )
+                              : const SizedBox(),
                         ],
                       ),
                     ],
