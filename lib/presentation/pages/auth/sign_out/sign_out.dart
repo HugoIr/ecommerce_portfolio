@@ -8,13 +8,23 @@ class SignOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Sign Out"),
+        backgroundColor: Colors.grey[500],
+      ),
       body: Center(
-        child: ElevatedButton(
-            onPressed: () async {
-              await AuthService.signOut();
-              Navigator.popUntil(context, ModalRoute.withName("/"));
-            },
-            child: Text("Sign Out")),
+        child: GestureDetector(
+          onTap: () async {
+            await AuthService.signOut();
+            Navigator.popUntil(context, ModalRoute.withName("/"));
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Colors.grey[300]),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text("Sign Out")),
+        ),
       ),
     );
   }

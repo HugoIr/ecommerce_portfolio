@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:funesia_clone/presentation/components/blocs/cart/cart_bloc.dart';
 import 'package:funesia_clone/presentation/components/blocs/search_page/search_result_bloc.dart';
 import 'package:funesia_clone/presentation/pages/checkout/checkout.dart';
+import 'package:funesia_clone/services/user/user_service.dart';
 
 class SearchAppBar extends StatelessWidget with PreferredSizeWidget {
   const SearchAppBar({
@@ -74,7 +77,16 @@ class SearchAppBar extends StatelessWidget with PreferredSizeWidget {
         GestureDetector(
           onTap: (() {
             Navigator.push(
-                context, MaterialPageRoute(builder: (builder) => Checkout()));
+                context,
+                MaterialPageRoute(
+                    builder: (builder) => BlocProvider(
+                          create: (context) => CartBloc(
+                              userService: UserService(
+                                  firebaseFirestore:
+                                      FirebaseFirestore.instance))
+                            ..add(GetCartEvent()),
+                          child: Checkout(),
+                        )));
           }),
           child: Icon(
             Icons.shopping_cart_rounded,

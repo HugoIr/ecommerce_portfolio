@@ -78,6 +78,7 @@ flutter:
     - assets/header/
     - assets/profile/
     - assets/seller/
+    - assets/homepage/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

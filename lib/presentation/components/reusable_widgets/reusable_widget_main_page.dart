@@ -195,14 +195,16 @@ SizedBox space() => const SizedBox(
       height: 20,
     );
 
+List<String> carouselAssets = [
+  "assets/homepage/carousel_2.jpeg",
+  "assets/homepage/carousel_1.jpeg",
+  "assets/homepage/carousel_3.jpeg",
+];
+
 CarouselSlider carousel() {
   return CarouselSlider(
     options: CarouselOptions(height: 170.0),
-    items: [
-      1,
-      2,
-      3,
-    ].map((i) {
+    items: carouselAssets.map((asset) {
       return Builder(
         builder: (BuildContext context) {
           return Container(
@@ -212,22 +214,11 @@ CarouselSlider carousel() {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[100]),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://picsum.photos/${MediaQuery.of(context).size.width.round()}/220',
-                  // fit: BoxFit.fill,
-                  loadingBuilder: ((buildContext, widget, imageChunkEvent) {
-                    if (imageChunkEvent != null) {
-                      return Center(
-                          child: CircularProgressIndicator(
-                        color: Colors.grey[500],
-                      ));
-                    } else {
-                      return widget;
-                    }
-                  }),
-                ),
-              ));
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    asset,
+                    fit: BoxFit.cover,
+                  )));
         },
       );
     }).toList(),
@@ -275,6 +266,6 @@ SnackBar customSnackBar(String text) {
     duration: Duration(seconds: 1),
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(50))),
+        borderRadius: BorderRadius.all(Radius.circular(25))),
   );
 }

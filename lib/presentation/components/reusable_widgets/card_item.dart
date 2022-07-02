@@ -186,7 +186,7 @@ class CardItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        "Rp${(price * ((100 - discount!.floor()) / 100).r)}",
+                        "Rp${(price * ((100 - discount!.floor()) / 100).r).toInt()}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 14),
                       ),

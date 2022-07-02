@@ -235,7 +235,7 @@ class Checkout extends StatelessWidget {
                 height: 8,
               ),
               Text(
-                "Sisa 3",
+                "Sisa 10",
                 style: TextStyle(fontSize: 12, color: Colors.red[900]),
               ),
               SizedBox(

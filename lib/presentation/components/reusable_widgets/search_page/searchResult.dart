@@ -21,7 +21,7 @@ class SearchResult extends StatelessWidget {
   Widget build(BuildContext context) {
     print("REBUILD GASIH SI SEARHRESULT");
     return Container(
-      height: 1000,
+      // height: 1000,
       padding: EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
       child: GridView.builder(
@@ -41,8 +41,8 @@ class SearchResult extends StatelessWidget {
             id: list[index].id,
             name: list[index].name,
             url: list[index].url,
-            price: list[index].price,
-            discount: list[index].discount,
+            price: list[index].price.toDouble(),
+            discount: list[index].discount.toDouble(),
             isSelected: list[index].isSelected,
             idSeller: list[index].idSeller,
             sellerName: list[index].sellerName,

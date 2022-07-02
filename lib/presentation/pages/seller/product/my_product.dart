@@ -81,7 +81,7 @@ class MyProduct extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return ProductItem(
                       text: state.listsItem[index].name,
-                      price: state.listsItem[index].price,
+                      price: state.listsItem[index].price.toDouble(),
                       url: state.listsItem[index].url,
                       stock: state.listsItem[index].stock!,
                       sold: state.listsItem[index].sold,
