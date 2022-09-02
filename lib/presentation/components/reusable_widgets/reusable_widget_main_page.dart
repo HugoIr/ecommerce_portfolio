@@ -19,8 +19,6 @@ Padding floatingActionButton() {
             child: FloatingActionButton(
               backgroundColor: Colors.amber[600],
               child: Container(
-                // padding: EdgeInsets.only(top: 4),
-                // color: Colors.blue,
                 alignment: Alignment.center,
                 child: officialStoreIcon(
                     size: 14,
@@ -32,10 +30,10 @@ Padding floatingActionButton() {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
-        Text(
+        const Text(
           "Official",
           style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
         ),
